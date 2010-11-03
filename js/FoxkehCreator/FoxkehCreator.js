@@ -647,7 +647,7 @@
        
        this.wallpaper = wallpaper;
        this.parentElement = $(parentElement);
-       this.enable = false;
+       this.isEnable = false;
        this.init();
  
        //イベント処理
@@ -743,7 +743,7 @@
               this.removeControll.button("enable");
               this.parentElement.css({opacity: 1});
               
-              this.enable = true;
+              this.isEnable = true;
        }
  };
  
@@ -758,7 +758,7 @@
        this.removeControll.button("disable");
        this.parentElement.css({opacity: .3});
        
-       this.enable = false;
+       this.isEnable = false;
  };
  
  /**
@@ -790,17 +790,17 @@
               self.wallpaper.activeParts.rotation = ui.value;
        });
        partsControllView.upIndexControll.bind("click", function(){
-              if(partsControllView.enable) {
+              if(partsControllView.isEnable) {
                      self.wallpaper.upPartsIndex(self.wallpaper.activeParts);
               }
        });
        partsControllView.downIndexControll.bind("click", function() {
-              if(partsControllView.enable) {
+              if(partsControllView.isEnable) {
                      self.wallpaper.downPartsIndex(self.wallpaper.activeParts);
               }
        });
        partsControllView.removeControll.bind("click", function() {
-              if(partsControllView.enable) {
+              if(partsControllView.isEnable) {
                      partsControllView.removeDialog.dialog("option", "buttons",{
                             "Ok": function() {
                                  self.wallpaper.removeParts(self.wallpaper.activeParts);
