@@ -1,3 +1,9 @@
+/*!
+ * Copyright 2010, Mozilla Japan.
+ * Dual licensed under the MIT or GPL Version 3 licenses.
+ * https://bitbucket.org/foxkeh/wallpaper/src/tip/MIT-LICENSE.txt
+ * https://bitbucket.org/foxkeh/wallpaper/src/tip/GPL-LICENSE.txt
+ */
 /** 
  * @fileOverview SVG要素 を Flash/Flex の Sprite っぽく扱うためのライブラリ
  * 
