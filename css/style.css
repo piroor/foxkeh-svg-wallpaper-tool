@@ -12,11 +12,16 @@ div
 	font-family: 'Reenie Beanie', 'Neucha', arial, sans-serif;
 }
 
-html,
+html {
+	background-color: #eee;
+}
+
 body {
-	background-color: #fff;
+	background: -moz-linear-gradient(top, #fff, #fff 90%, #eee);
+	background: -webkit-gradient(linear, left top, left bottom, from(#fff), color-stop(0.9, #fff), to(#eee));
 	color: #222;
-}	
+	padding-top: 20px;
+}
 
 a {	
 	outline:none;
@@ -24,14 +29,13 @@ a {
 
 #page {
 	margin: 0 auto;
-	margin-top: 20px;
 	width: 980px;
 	padding: 60px;
 	padding-top: 20px;
 	padding-bottom: 10px;
-	box-shadow: 0px 0px 20px #666;
-	-moz-box-shadow: 0px 0px 20px #666;
-	-webkit-box-shadow: 0px 0px 20px #666;
+	box-shadow: 0px 0px 30px #333;
+	-moz-box-shadow: 0px 0px 30px #333;
+	-webkit-box-shadow: 0px 0px 30px #333;
 	border-radius: 10px;
 	-moz-border-radius: 10px;
 	-webkit-border-radius: 10px;
@@ -46,8 +50,8 @@ a {
 }
 
 h1 {
-	text-shadow: 1px 1px 5px #666;
-	color: rgba(47, 38, 6,.9);
+	text-shadow: 0px 0px 5px #666;
+	color: rgba(47, 38, 6,.8);
 	font-size: 36px;
 	-moz-transform-origin: 0 0;
 	-weblit-transform-origin: 0 0;
@@ -136,7 +140,7 @@ h1 {
 	height: 90px;
 	border: none;
 	text-align: center;
-	font-size: 72px;
+	font-size: 90px;
 	line-height: 1;
 	background-color: #fff;
 	border: 1px solid #ccc;
@@ -148,12 +152,12 @@ h1 {
 	padding-right:10px !important;
 }
 
-#pallets #backgroundList ul.list li {
+#pallets #backgroundList.list li {
 	width: 190px;
 	height: 106px;
 }
 
-#pallets #backgroundList ul.list li a {
+#pallets #backgroundList.list li a {
 	width: 180px;
 	height: 96px;
 	padding: 5px;
@@ -164,7 +168,7 @@ h1 {
 	border: none;
 }
 
-#pallets #backgroundList ul.list li a img {
+#pallets #backgroundList.list li a img {
 	width: 180px;
 }
 

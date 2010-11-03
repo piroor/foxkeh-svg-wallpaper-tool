@@ -16,9 +16,12 @@
    
                               //壁紙表示用SVG要素ID名
                               wallpaperSVG: "wallpaper",
-               
+                              
                               //初期バックグランド
                               background: "parts/svg/bg/bg_2010_10.svg", 
+                              
+                              //パーツの最大個数
+                              partsLimit: 5,
                               
                               //初期パーツリスト
                               parts: [{

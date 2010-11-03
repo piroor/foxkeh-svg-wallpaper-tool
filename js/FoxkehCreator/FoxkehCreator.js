@@ -101,7 +101,7 @@
 	      for(var i=0,l=param.parts.length; i<l; i++) {
 		     this.wallpaper.loadParts(param.parts[i]);
 	      }
-       } 
+       }
  
  
        /**
@@ -117,7 +117,7 @@
  
 	//背景画像リストコントローラー
 	if(param.backgroundList) {
-		var list = $("#"+param.backgroundList+" .list");
+		var list = $("#"+param.backgroundList);
 		this.backgroundListController = new FoxkehCreator.BackgroundListController(this.wallpaper, list);
 	}
  
@@ -148,17 +148,21 @@
  /**
   * 壁紙
   */
- FoxkehCreator.Wallpaper = function(svg) {
+ FoxkehCreator.Wallpaper = function(svg, partsLimit) {
 	
 	this.svg = svg;
 	this._origWidth = svg.width.baseVal.value;
 	
 	this.activeParts = null;
 	
-	this.partsLimit = 5; //パーツ数の最大値
+	this.partsLimit = (typeof partsLimit == "number")? partsLimit : 5; //パーツ数の最大値
 	
 	//初期化
 	this.init();
+        
+       //ドラッグ時にゴミが残ってしまう問題対策
+       var self = this;
+       window.addEventListener('mousemove', function(){ self._refresh(); }, true);
  
  };
  
@@ -350,9 +354,8 @@
  
 	}
 		
-	var self = this;
-	window.addEventListener('mousemove', function(){ self._refresh(); }, true);
-       
+       var self = this;       
+
        $(this).trigger("parts_activated");
        
  };
@@ -527,7 +530,7 @@
        function(scale) {
                             
               this.scaleX = scale;
-              this.scaleY = scale;
+              this.scaleY = Math.abs(scale);
               
               this._scale = scale;
               
@@ -676,7 +679,7 @@
        this.parentElement.html(html);
        
        //コントローラー初期化
-       this.scaleControll = this._createSlider("scaleControll",1,0.1,10,.1);
+       this.scaleControll = this._createSlider("scaleControll",1,-10,10,.1);
        this.alphaControll = this._createSlider("alphaControll",1,0,1,.1);
        this.rotationControll = this._createSlider("rotationControll",0,-180,180,1);
        this.upIndexControll = this.parentElement.find(".upIndexControll").button({
@@ -820,7 +823,7 @@
   */
  FoxkehCreator.PartsListView = function(partsList) {
 	
-	this.list = $(partsList).find("> .list li a");
+	this.list = $(partsList).find("> li a");
 	
 	//イベント処理
 	var self = this;
