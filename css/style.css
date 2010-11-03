@@ -5,13 +5,18 @@ div
 {
 	margin: 0px;
 	padding: 0px;
-	font-family: sans-serif;
+	font-family: 'Reenie Beanie', 'Neucha', arial, sans-serif;
+}
+
+.ui-widget {
+	font-family: 'Reenie Beanie', 'Neucha', arial, sans-serif;
 }
 
 html,
 body {
-	background-color: #DFDCD1;
-}
+	background-color: #fff;
+	color: #222;
+}	
 
 a {	
 	outline:none;
@@ -19,16 +24,37 @@ a {
 
 #page {
 	margin: 0 auto;
-	width: 1000px;
-	height: 100%;
-	padding-left: 60px;
-	padding-right: 60px;
+	margin-top: 20px;
+	width: 980px;
+	padding: 60px;
+	padding-top: 20px;
+	padding-bottom: 20px;
+	box-shadow: 0px 0px 20px #666;
+	-moz-box-shadow: 0px 0px 20px #666;
+	-webkit-box-shadow: 0px 0px 20px #666;
+	border-radius: 10px;
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
+	border: 4px solid #CFCCC2;
 	background-color: #DFDCD1;
-	/*background-image: url("../js/lib/jquery/jquery-ui/css/custom-theme/images/ui-bg_fine-grain_10_eceadf_60x60.png");*/
+	background: -moz-linear-gradient(top, #DFDCD1, #CFC9B5 80%, #CFC9B5);
+	background: -webkit-gradient(linear, left top, left bottom, from(#DFDCD1), color-stop(0.8, #CFC9B5), to(#CFC9B5));
 }
 
 #header {
 	margin-bottom: 20px;
+}
+
+h1 {
+	text-shadow: 1px 1px 5px #666;
+	color: rgba(47, 38, 6,.9);
+	font-size: 36px;
+	-moz-transform-origin: 0 0;
+	-weblit-transform-origin: 0 0;
+	transform-origin: 0 0;
+	-moz-transform: translate(-20px,0px) rotate(-1deg);
+	-webkit-transform: translate(-20px,0px) rotate(-1deg);
+	transform: translate(-20px,0px) rotate(-1deg);
 }
 
 #wallpaperWrapper {
@@ -44,6 +70,9 @@ a {
 #wallpaper {
 	margin-bottom: 10px;
 	border: 10px solid rgba(255,255,255,.7);
+	box-shadow: 1px 1px 3px rgba(0,0,0,.5);
+	-moz-box-shadow: 1px 1px 3px rgba(0,0,0,.5);
+	-webkit-box-shadow: 1px 1px 3px rgba(0,0,0,.5);
 }
 
 #menu {
@@ -64,9 +93,9 @@ a {
 	background-color: #ccc;
 	background: -moz-linear-gradient(top, #ddd, #999);
 	background: -webkit-gradient(linear, left top, left bottom, from(#ddd), to(#999));
-	box-shadow: 1px 1px 3px #000;
-	-moz-box-shadow: 1px 1px 3px #000;
-	-webkit-box-shadow: 1px 1px 3px #000;
+	box-shadow: 1px 1px 3px rgba(0,0,0,.8);
+	-moz-box-shadow: 1px 1px 3px rgba(0,0,0,.8);
+	-webkit-box-shadow: 1px 1px 3px rgba(0,0,0,.8);
 	border-radius: 8px;
 	-moz-border-radius: 8px;
 	-webkit-border-radius: 8px;
@@ -74,6 +103,7 @@ a {
 	color: #000;
 	text-decoration: none;
 	font-weight: bold;
+	font-family: arial, sans-serif;
 }
 
 #pallets {
@@ -190,4 +220,5 @@ address {
 	text-align: center;
 	font-size: 10px;
 	margin: 20px;
+	font-family: arial, sans-serif;
 }

@@ -37,39 +37,82 @@
   * 初期化
   */
  FoxkehCreator.FoxkehCreator = function(param) {
-	
-	if(!param) {
-		return;
-	}
+       
+       /**
+       param = {
+       
+              //初期バックグランド
+              background: "parts/svg/bg/bg_2010_10.svg", 
+              
+              //初期パーツリスト
+              parts: [{
+                      file: "parts/svg/foxkeh/foxkeh_2010_10.svg",
+                      right: 100,
+                      bottom: 100,
+                      alpha: 1,
+                      scaleX: 1,
+                      scaleY: 1,
+                      rotation: 0
+                   }],
+       
+              //壁紙表示用SVG要素ID名
+              wallpaperSVG: "wallpaper",
+              
+              //壁紙サイズ選択要素ID名
+              sizeSelector: "sizeSelect",
+              
+              //背景一覧ID名
+              backgroundList: "backgroundList",
+       
+              //パーツ一覧ID名
+              partsList : "partsList",
+              
+              //ダウンロードボタンID名
+              downLoadButton: "downloadButton",
+              
+              //パーツコントローラーID名
+              partsControll: "partsControll"
+       
+       };
+       */
+       
+       if(!param) {
+	      return;
+       }
+ 
+       /**
+        * 基本オブジェクト [Model]
+        */
  
 	//壁紙
-	if(param.wallpaperSVG) {
-		this.wallpaper = new FoxkehCreator.Wallpaper($("#"+param.wallpaperSVG)[0]);
-	} else {
-		return;
-	}
- 
-	//壁紙サイズ設定
-	if(param.sizeSelector) {
-		var select = $("#"+param.sizeSelector);
-		this.sizeSelectorView = new FoxkehCreator.WallpaperSizeSelectorView(select);
-		this.sizeSelectorController = new FoxkehCreator.WallpaperSizeSelectorController(this.sizeSelectorView, this.wallpaper);
-	}
+       if(param.wallpaperSVG) {
+	      this.wallpaper = new FoxkehCreator.Wallpaper($("#"+param.wallpaperSVG)[0]);
+       } else {
+	      return;
+       }
 	
-	//背景画像読み込み
-	if(param.background) {
-		this.wallpaper.loadBackground(param.background);
-	}
+       //背景画像読み込み
+       if(param.background) {
+	      this.wallpaper.loadBackground(param.background);
+       }
  
-	//パーツ読み込み
-	if(param.parts) {
-		
-		for(var i=0,l=param.parts.length; i<l; i++) {
-
-			this.wallpaper.loadParts(param.parts[i]);
+       //パーツ読み込み
+       if(param.parts) {	
+	      for(var i=0,l=param.parts.length; i<l; i++) {
+		     this.wallpaper.loadParts(param.parts[i]);
+	      }
+       } 
  
-		}
-		
+ 
+       /**
+        * UI [View, Controller]
+        */
+ 
+ 	//壁紙サイズ設定
+	if(param.sizeSelector) {
+	      var select = $("#"+param.sizeSelector);
+	      this.sizeSelectorView = new FoxkehCreator.WallpaperSizeSelectorView(select);
+	      this.sizeSelectorController = new FoxkehCreator.WallpaperSizeSelectorController(this.sizeSelectorView, this.wallpaper);
 	}
  
 	//背景画像リストコントローラー
