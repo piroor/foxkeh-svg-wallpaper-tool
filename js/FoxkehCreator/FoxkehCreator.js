@@ -647,6 +647,7 @@
        
        this.wallpaper = wallpaper;
        this.parentElement = $(parentElement);
+       this.enable = false;
        this.init();
  
        //イベント処理
@@ -741,6 +742,8 @@
               this.downIndexControll.button("enable");
               this.removeControll.button("enable");
               this.parentElement.css({opacity: 1});
+              
+              this.enable = true;
        }
  };
  
@@ -755,6 +758,7 @@
        this.removeControll.button("disable");
        this.parentElement.css({opacity: .3});
        
+       this.enable = false;
  };
  
  /**
@@ -786,21 +790,27 @@
               self.wallpaper.activeParts.rotation = ui.value;
        });
        partsControllView.upIndexControll.bind("click", function(){
-              self.wallpaper.upPartsIndex(self.wallpaper.activeParts);
+              if(partsControllView.enable) {
+                     self.wallpaper.upPartsIndex(self.wallpaper.activeParts);
+              }
        });
        partsControllView.downIndexControll.bind("click", function() {
-              self.wallpaper.downPartsIndex(self.wallpaper.activeParts);
+              if(partsControllView.enable) {
+                     self.wallpaper.downPartsIndex(self.wallpaper.activeParts);
+              }
        });
        partsControllView.removeControll.bind("click", function() {
-              partsControllView.removeDialog.dialog("option", "buttons",{
-                     "Ok": function() {
-                          self.wallpaper.removeParts(self.wallpaper.activeParts);
-                          $(this).dialog("close");
-                     },
-                     "Cancel": function() {
-                           $(this).dialog("close");     
-                     }
-              }).dialog("open");
+              if(partsControllView.enable) {
+                     partsControllView.removeDialog.dialog("option", "buttons",{
+                            "Ok": function() {
+                                 self.wallpaper.removeParts(self.wallpaper.activeParts);
+                                 $(this).dialog("close");
+                            },
+                            "Cancel": function() {
+                                  $(this).dialog("close");     
+                            }
+                     }).dialog("open");
+              }
        });
        
  };
