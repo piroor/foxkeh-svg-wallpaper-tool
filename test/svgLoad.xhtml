@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<title />
+<script type="text/javascript" src="../js/lib/jquery/jquery-1.4.3.min.js"></script>
+<script type="text/javascript" src="../js/lib/SVGUtil/loadSVG.js"></script>
+<script type="text/javascript" src="../js/lib/SVGUtil/Transform.js"></script>
+<script type="text/javascript" src="../js/lib/SVGSprite.js" />
+
+<script type="text/javascript">
+
+	window.onload = function(){
+		
+		var parent = document.getElementById("svg");
+		SVGUtil.loadSVG("../parts/svg/foxkeh/2009_10.svg", function(svg){
+						
+			parent.appendChild(svg);
+			var svgSprite = new SVGSprite.Sprite(svg);
+			svgSprite.buttonMode = true;
+			svgSprite.rotation = 45;
+			svgSprite.addEventListener('mousedown', function(){
+				
+				svgSprite.startDrag(false, {x: -1000, y: -1000, width: 3000, height: 3000});
+				
+				window.addEventListener('mouseup', function(){ svgSprite.stopDrag() }, true);
+				
+			}, true);
+			
+		});
+		
+	}
+	
+</script>
+
+<style type="text/css">
+
+	html {
+		
+		background-color: #eeeeee;	
+	}
+
+</style>
+
+</head>
+<body>
+
+
+<h1>loadSVG()</h1>
+
+<svg id="svg" xmlns="http://www.w3.org/2000/svg" width="500" height="500" viewBox="0 0 1000 1000">
+
+	<rect width="1000" height="1000" style="fill: #ccc" />
+	
+</svg>
+
+<p><input type="button" value="ソース表示" id="showsource" /></p>
+<textarea id="source" style="width: 500px; height: 100px">
+</textarea>
+</body>
+</html>

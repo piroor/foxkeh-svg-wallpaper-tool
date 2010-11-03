@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+	<title>Foxkeh's Wallpaper Creator OSS</title>
+	<link rel="stylesheet" type="text/css" media="screen,print" href="css/style.css" />
+	<link rel="stylesheet" type="text/css" media="screen,print" href="js/lib/jquery/jquery-ui/css/custom-theme/jquery-ui-1.8.5.custom.css" />
+	
+	<script type="text/javascript" src="js/lib/jquery/jquery-1.4.3.min.js" />
+	<script type="text/javascript" src="js/lib/jquery/jquery-ui/js/jquery-ui-1.8.5.custom.min.js"></script>
+	<script type="text/javascript" src="js/lib/SVGUtil/loadSVG.js"></script>
+	<script type="text/javascript" src="js/lib/SVGUtil/Transform.js"></script>
+	<script type="text/javascript" src="js/lib/SVGSprite.js"></script>
+	<script type="text/javascript" src="js/lib/base64.js"></script>
+	<script type="text/javascript" src="js/FoxkehCreator/FoxkehCreator.js"></script>
+	<script type="text/javascript" src="js/foxkehCreator.js"></script>
+
+</head>
+<body>
+<div id="page">
+	
+	<div id="header">
+		<h1>Foxkeh's Wallpaper Creator OSS</h1>
+	</div>
+	
+	<div id="wallpaperWrapper">
+
+		<div>
+			<form>
+				<p id="menu">Select your monitor size: <select id="sizeSelect" name="size">
+					<!-- <option id="current" value="1280x800">Current Desktop Size(1280x800)</option> -->
+					<option value="640x480">640x480</option>
+					<option value="800x480">800x480</option>
+					<option value="800x600">800x600</option>
+					<option value="1024x768">1024x768</option>
+					<option value="1152x864">1152x864</option>
+					<option value="1280x768">1280x768</option>
+					<option value="1280x800">1280x800</option>
+					<option value="1280x960">1280x960</option>
+					<option value="1280x1024">1280x1024</option>
+					<option value="1400x1050">1400x1050</option>
+					<option value="1440x900">1440x900</option>
+					<option value="1600x1200">1600x1200</option>
+					<option value="1680x1050">1680x1050</option>
+					<option value="1920x1200">1920x1200</option>
+					<option value="2560x1440">2560x1440</option>
+					<option value="2560x1600">2560x1600</option>
+					<option value="1024x1024">1024x1024 (iPad)</option>
+				</select>
+				<a id="downloadButton">Download SVG file</a>
+				</p>
+			</form>
+
+		</div>
+
+		<svg id="wallpaper" xmlns="http://www.w3.org/2000/svg" width="500" height="480" viewBox="0 0 1280 960">
+
+			<!-- <rect width="9999" height="9999" style="fill: #000" /> -->
+			
+		</svg>
+		
+		<div id="partsControll"></div>
+	</div>
+	
+	<div id="pallets">
+		
+		<h2><a href="#">Parts</a></h2>
+			
+		<div id="partsList">
+			<ul class="list">
+				<li><a href="./parts/svg/foxkeh/foxkeh_2010_10.svg"><img src="./parts/thumbnail/foxkeh/foxkeh_2010_10.png" /></a></li>
+				<li><a href="./parts/svg/foxkeh/foxkeh_2010_09.svg"><img src="./parts/thumbnail/foxkeh/foxkeh_2010_09.png" /></a></li>
+				<li><a href="./parts/svg/foxkeh/foxkeh_2010_08.svg"><img src="./parts/thumbnail/foxkeh/foxkeh_2010_8.png" /></a></li>
+				<li><a href="./parts/svg/foxkeh/foxkeh_2010_04.svg"><img src="./parts/thumbnail/foxkeh/foxkeh_2010_04.png" /></a></li>
+				<li><a href="./parts/svg/foxkeh/foxkeh_2010_03.svg"><img src="./parts/thumbnail/foxkeh/foxkeh_2010_03.png" /></a></li>
+				<li><a href="./parts/svg/foxkeh/foxkeh_2010_02.svg"><img src="./parts/thumbnail/foxkeh/foxkeh_2010_02.png" /></a></li>
+				<li><a href="./parts/svg/foxkeh/foxkeh_2010_01.svg"><img src="./parts/thumbnail/foxkeh/foxkeh_2010_01.png" /></a></li>
+			</ul>
+		</div>
+		
+		
+		
+		<h2><a href="#">Background</a></h2>
+		
+		<div id="backgroundList">
+			<ul class="list">
+				<li><a href="./parts/svg/bg/bg_2010_10.svg"><img src="./parts/thumbnail/bg/bg_2010_10.png" /></a></li>
+				<li><a href="./parts/svg/bg/bg_2010_09.svg"><img src="./parts/thumbnail/bg/bg_2010_09.png" /></a></li>
+				<li><a href="./parts/svg/bg/bg_2010_08.svg"><img src="./parts/thumbnail/bg/bg_2010_08.png" /></a></li>
+				<li><a href="./parts/svg/bg/bg_2010_03.svg"><img src="./parts/thumbnail/bg/bg_2010_03.png" /></a></li>
+				<li><a href="./parts/svg/bg/bg_2010_02.svg"><img src="./parts/thumbnail/bg/bg_2010_02.png" /></a></li>
+				<li><a href="./parts/svg/bg/bg_2010_01.svg"><img src="./parts/thumbnail/bg/bg_2010_01.png" /></a></li>
+				<li><a href="./parts/svg/bg/2009_10.svg"><img src="./parts/thumbnail/bg/2009_10.png" /></a></li>
+			</ul>
+		</div>
+		
+	</div><!-- /#pallets -->
+	
+	<div id="footer">
+		<address>Copyright &copy; 2006-2010 Mozilla Japan. All rights reserved.</address>
+	</div>
+	
+</div><!-- /#page -->
+</body>
+</html>
