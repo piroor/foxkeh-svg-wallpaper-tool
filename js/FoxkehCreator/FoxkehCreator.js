@@ -139,7 +139,12 @@
        //パーツコントローラー
        if(param.partsControll) {
               var partsControll = $("#"+param.partsControll);
-              this.partsControllView = new FoxkehCreator.PartsControllView(this.wallpaper, partsControll);
+              var options = {
+                     scale: param.scaleOptions,
+                     alpha: param.alphaOptions,
+                     rotation: param.rotationOptions
+              };
+              this.partsControllView = new FoxkehCreator.PartsControllView(this.wallpaper, partsControll, options);
               this.partsControllController = new FoxkehCreator.PartsControllController(this.wallpaper, this.partsControllView);
        }
  
@@ -649,12 +654,12 @@
  /**
   * パーツコントロールView
   */
- FoxkehCreator.PartsControllView = function(wallpaper, parentElement) {
+ FoxkehCreator.PartsControllView = function(wallpaper, parentElement, options) {
        
        this.wallpaper = wallpaper;
        this.parentElement = $(parentElement);
        this.isEnable = false;
-       this.init();
+       this.init(options);
  
        //イベント処理
        var self = this;
@@ -664,7 +669,7 @@
  };
  
  //初期化
- FoxkehCreator.PartsControllView.prototype.init = function(parentElement) {
+ FoxkehCreator.PartsControllView.prototype.init = function(options) {
        
        //要素作成
        var html = '<dl>';
@@ -682,9 +687,9 @@
        this.parentElement.html(html);
        
        //コントローラー初期化
-       this.scaleControll = this._createSlider("scaleControll",1,-10,10,.1);
-       this.alphaControll = this._createSlider("alphaControll",1,0,1,.1);
-       this.rotationControll = this._createSlider("rotationControll",0,-180,180,1);
+       this.scaleControll = this._createSlider("scaleControll",options.scale);
+       this.alphaControll = this._createSlider("alphaControll",options.alpha);
+       this.rotationControll = this._createSlider("rotationControll",options.rotation);
        this.upIndexControll = this.parentElement.find(".upIndexControll").button({
             icons: {
                 primary: "ui-icon-circle-triangle-n"
@@ -719,11 +724,14 @@
  };
  
  //スライダー作成
- FoxkehCreator.PartsControllView.prototype._createSlider = function(className,value,min,max,step) {
+ FoxkehCreator.PartsControllView.prototype._createSlider = function(className,option) {
+       
+       var min = (typeof option.min == "number")? option.min : 0;
+       var max = (typeof option.max == "number")? option.max : 100;
+       var step = (typeof option.step == "number")? option.step : 1;
        
        var slider = this.parentElement.find("."+className).slider({
               range: "min",
-              value: value,
               min: min,
               max: max,
               step: step,
