@@ -160,10 +160,6 @@
 	//初期化
 	this.init();
         
-       //ドラッグ時にゴミが残ってしまう問題対策
-       var self = this;
-       window.addEventListener('mousemove', function(){ self._refresh(); }, true);
- 
  };
  
  //壁紙を初期化
@@ -185,10 +181,17 @@
  
 	//パーツリスト作成
 	this.parts = [];
- 
+
 	//mousedown を無効化して、不要なドラッグを防止
 	this.svg.addEventListener("mousedown", function(e){e.preventDefault();}, false);
- 
+
+       //ドラッグ時にゴミが残ってしまう問題対策
+       var self = this;
+       window.addEventListener('mousemove', function(){ self._refresh(); }, true);
+        
+       //イベント処理
+       $(this._backgroundLayer).click(function(){ self.deactivateParts(); });
+        
  };
  
  //リフレッシュ
