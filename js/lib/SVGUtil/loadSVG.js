@@ -12,10 +12,7 @@
  *
  * copyright 2010 OFFIBA,inc.
  * Dual licensed under the MIT or GPL Version 3 licenses.
- */ 
-
-var global = this;
-
+ */
 (function(global){
 	
 	function loadSVG(url,callback) {

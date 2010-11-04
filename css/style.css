@@ -80,7 +80,7 @@ h1 {
 }
 
 #wallpaper {
-	margin-bottom: 10px;
+	margin: 0px;
 	border: 10px solid rgba(255,255,255,.7);
 	border-bottom-width: 40px;
 	box-shadow: 1px 1px 3px rgba(0,0,0,.5);
@@ -88,9 +88,21 @@ h1 {
 	-webkit-box-shadow: 1px 1px 3px rgba(0,0,0,.5);
 }
 
+#indicator {
+	position: absolute;
+	bottom: 5px;
+	left: 15px;
+	font-size: 12px;
+}
+
+#indicator img {
+	vertical-align: middle;
+	margin-right: 5px;
+}
+
 #downloadButton {
 	position: absolute;
-	bottom: 23px;
+	bottom: 13px;
 	right: 10px;
 	display: block;
 	margin-left: 1em;

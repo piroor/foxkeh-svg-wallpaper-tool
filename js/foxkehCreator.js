@@ -17,6 +17,9 @@
                               //壁紙表示用SVG要素ID名
                               wallpaperSVG: "wallpaper",
                               
+                              //コピーライト表示用SVGファイル
+                              copyright: "parts/svg/copyright/copyright_2010.svg",
+                              
                               //初期バックグランド
                               background: "parts/svg/bg/bg_2010_10.svg", 
                               
@@ -55,7 +58,10 @@
                               downLoadButton: "downloadButton",
                               
                               //パーツコントローラーID名
-                              partsControll: "partsControll"
+                              partsControll: "partsControll",
+                              
+                              //インジケーターID名
+                              indicator: "indicator"
    
 		};
 		
@@ -63,6 +69,21 @@
    
 		//グローバルオブジェクトに(debug用)
 		global.foxkehCreator = foxkehCreator;
+                
+                
+               //位置調整
+               setPosition();
+               $(window).bind("resize", function(){ setPosition(); });
+                
+               function setPosition() {
+                                    
+                  var height = $(window).height();
+                  var delta = height-$("#page").height();
+                  var marginTop = (delta>0)? delta/4 : 0;
+                  
+                  $("#page").css({marginTop: marginTop});
+                                  
+               };
 		
 					
    });

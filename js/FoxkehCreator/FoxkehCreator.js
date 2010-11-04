@@ -90,19 +90,7 @@
        } else {
 	      return;
        }
-	
-       //背景画像読み込み
-       if(param.background) {
-	      this.wallpaper.loadBackground(param.background);
-       }
- 
-       //パーツ読み込み
-       if(param.parts) {	
-	      for(var i=0,l=param.parts.length; i<l; i++) {
-		     this.wallpaper.loadParts(param.parts[i]);
-	      }
-       }
- 
+       
  
        /**
         * UI [View, Controller]
@@ -147,6 +135,34 @@
               this.partsControllView = new FoxkehCreator.PartsControllView(this.wallpaper, partsControll, options);
               this.partsControllController = new FoxkehCreator.PartsControllController(this.wallpaper, this.partsControllView);
        }
+       
+       //インジケーター
+       if(param.indicator) {
+              var indicator = $("#"+param.indicator);
+              this.indicatorView = new FoxkehCreator.IndicatorView(this.wallpaper, indicator);
+       }
+       
+       
+       /**
+        * 画像読み込み
+        */
+       
+       //コピーライト画像読み込み
+       if(param.copyright) {
+              this.wallpaper.loadCopyright(param.copyright);
+       }
+       
+       //背景画像読み込み
+       if(param.background) {
+	      this.wallpaper.loadBackground(param.background);
+       }
+ 
+       //パーツ読み込み
+       if(param.parts) {	
+	      for(var i=0,l=param.parts.length; i<l; i++) {
+		     this.wallpaper.loadParts(param.parts[i]);
+	      }
+       }
  
  };
  
@@ -157,10 +173,10 @@
 	
 	this.svg = svg;
 	this._origWidth = svg.width.baseVal.value;
-	
-	this.activeParts = null;
-	
 	this.partsLimit = (typeof partsLimit == "number")? partsLimit : 5; //パーツ数の最大値
+	this.parts = [];
+	this.activeParts = null;
+        this._loadingObjects = [];
 	
 	//初期化
 	this.init();
@@ -177,15 +193,17 @@
 	var partsLayer = document.createElementNS("http://www.w3.org/2000/svg", "g");
 	partsLayer.setAttribute("class", "foxkehWallpaperParts");
 	
+        var copyrightLayer = document.createElementNS("http://www.w3.org/2000/svg", "g");
+	copyrightLayer.setAttribute("class", "foxkehWallpaperCopyright");
+        
 	this._backgroundLayer = backgroundLayer;
 	this._partsLayer = partsLayer;
+        this._copyrightLayer = copyrightLayer;
  
 	//レイヤーを追加
 	this.svg.appendChild(this._backgroundLayer);
 	this.svg.appendChild(this._partsLayer);
- 
-	//パーツリスト作成
-	this.parts = [];
+        this.svg.appendChild(this._copyrightLayer);
 
 	//mousedown を無効化して、不要なドラッグを防止
 	this.svg.addEventListener("mousedown", function(e){e.preventDefault();}, false);
@@ -197,6 +215,37 @@
        //イベント処理
        $(this._backgroundLayer).click(function(){ self.deactivateParts(); });
         
+ };
+ 
+ //ロード中オブジェクトを追加
+ FoxkehCreator.Wallpaper.prototype._addLoadingObjects = function(url) {
+       
+       this._loadingObjects.push(url);
+   
+       //イベント発生
+       $(this).trigger("load_start");
+       
+       var index = this._loadingObjects.length-1;
+       return index;
+
+ };
+ 
+ //ロード中オブジェクトを削除
+ FoxkehCreator.Wallpaper.prototype._removeLoadingObjects = function(index) {
+       
+       //this._loadingObjects.splice(index,1);
+       this._loadingObjects[index] = "";
+       
+       //ロード完了イベント
+       $(this).trigger("load_complete");
+       
+       //ロード完全完了イベント
+       if(this._loadingObjects.join("") == "") {
+              
+           $(this).trigger("load_all_complete");
+                         
+       }
+       
  };
  
  //リフレッシュ
@@ -214,7 +263,8 @@
 	this.svg.setAttribute("height", _height);
 	this.svg.setAttribute("viewBox", "0 0 "+width+" "+height);
  
-	//背景サイズの調整
+	//サイズの調整
+        this._adjustmentCopyrightSize();
 	this._adjustmentBackgroundSize();
  
  };
@@ -223,6 +273,57 @@
  FoxkehCreator.Wallpaper.prototype.getViewBox = function() {
  
 	return this.svg.viewBox.baseVal;
+ 
+ };
+ 
+ //copyrightを設定
+ FoxkehCreator.Wallpaper.prototype.setCopyright = function(svgElement) {
+
+	//既存の画像をリムーブ
+	if(this._copyright) {
+		this._copyrightLayer.removeChild(this._copyright.svgElement);
+	}
+ 
+	this._copyrightLayer.appendChild(svgElement);
+	var copyright = new SVGSprite.Sprite(svgElement);
+
+	this._copyright = copyright;
+ 
+	//サイズの調整
+	this._adjustmentCopyrightSize();
+ };
+ 
+ //コピーライトのサイズ調整
+ FoxkehCreator.Wallpaper.prototype._adjustmentCopyrightSize = function() {
+	
+	 if(this._copyright) {
+ 
+		var viewBox = this.getViewBox();
+		var width = this._copyright.width;
+		var height = this._copyright.height;
+                
+		this._copyright.x = viewBox.width-(width/2)-10;
+		this._copyright.y = viewBox.height-(height/2)-5;
+                
+		this._refresh();
+ 
+	 }
+	 
+ };
+ 
+ //コピーライトをロード
+ FoxkehCreator.Wallpaper.prototype.loadCopyright = function(url) {
+	
+	var self = this;
+        
+        var index = this._addLoadingObjects(url);     
+        
+	SVGUtil.loadSVG(url, function(svg){
+	      
+	      self.setCopyright(svg);
+              self._removeLoadingObjects(index);      				
+	
+	});
  
  };
  
@@ -283,13 +384,16 @@
  //背景をロード
  FoxkehCreator.Wallpaper.prototype.loadBackground = function(url) {
 	
-	var self = this;
+       var self = this;
  
-	SVGUtil.loadSVG(url, function(svg){
-							
-		self.setBackground(svg);
+       var index = this._addLoadingObjects(url);    
+ 
+       SVGUtil.loadSVG(url, function(svg){
+       
+	      self.setBackground(svg);
+              self._removeLoadingObjects(index);       							
 	
-	});
+       });
  
  };
  
@@ -400,14 +504,18 @@
  
 	 var self = this;
 	 
+         var index = this._addLoadingObjects(param.file);
+         
 	 SVGUtil.loadSVG(param.file, function(svg){
+                
+	      var parts = new FoxkehCreator.Parts(svg);
 		
-		var parts = new FoxkehCreator.Parts(svg);
-		
-		var viewBox = self.getViewBox();
-		parts.x = viewBox.width/2;
-		parts.y = viewBox.height/2;
-		self.addParts(parts);
+	      var viewBox = self.getViewBox();
+	      parts.x = viewBox.width/2;
+	      parts.y = viewBox.height/2;
+	      self.addParts(parts);
+                
+              self._removeLoadingObjects(index); 
 	
 	});
 		
@@ -911,6 +1019,35 @@
 	var self = this;
 	this.buttonElement.mouseover(function(){ this.href = self.wallpaper.toDataURL(); });
  
+ };
+ 
+ /**
+  * インジケーターView
+  */
+ FoxkehCreator.IndicatorView = function(wallpaper, indicatorElement) {
+       
+       this.wallpaper = wallpaper;
+       this.element = $(indicatorElement);
+ 
+       //イベント
+       var self = this;
+       $(this.wallpaper).bind("load_start",function(){ self.onLoadingStarted(); });
+       $(this.wallpaper).bind("load_all_complete", function(){ self.onLoadingAllCompleted(); });
+
+ };
+ 
+ //ローディング開始
+ FoxkehCreator.IndicatorView.prototype.onLoadingStarted = function() {
+       
+       this.element.html('<img src="./images/loading.gif" /> Loading...');
+       
+ };
+ 
+ //ローディング完全完了
+ FoxkehCreator.IndicatorView.prototype.onLoadingAllCompleted = function() {
+       
+       this.element.html('');
+       
  };
  
  //グローバルオブジェクト化
