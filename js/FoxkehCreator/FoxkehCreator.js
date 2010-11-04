@@ -265,11 +265,14 @@
 			height = bgAspect/width;
  
 		}
- 
+              
+                var deltaWidth = width-viewBox.width;
+                var deltaHeight = height-viewBox.height;
+                
 		this._background.width = width;
 		this._background.height = height;
-		this._background.x = this._background.width/2;
-		this._background.y = this._background.height/2;
+		this._background.x = (viewBox.width/2)-(deltaWidth/2);
+		this._background.y = (viewBox.height/2)-(deltaHeight/2);
  
 		this._refresh();
  
