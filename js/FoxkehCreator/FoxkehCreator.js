@@ -671,7 +671,7 @@
        html +=	'<dd><div class="alphaControll"></div></dd>';
        html +=	'<dt>Rotation :</dt>';
        html +=	'<dd><div class="rotationControll"></div></dd>';
-       html +=	'<dt>Index/Remove :</dt>';
+       html +=	'<dt>Ordering/Delete :</dt>';
        html +=	'<dd><div class="upIndexControll"></div><div class="downIndexControll"></div><div title="remove element" class="removeControll"></div></dd>';
        html +=	'</dl>';
        html +=  '<div class="removeDialog"><p>Do you want to delete this element?</p></div>';
