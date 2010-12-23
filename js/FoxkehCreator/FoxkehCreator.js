@@ -607,9 +607,10 @@
 	
 	//dataURIに変換
 	var serialzedSVG = new XMLSerializer().serializeToString(tmpSVG);
-	var svgBase64 = Base64.encode(serialzedSVG);
-	var dataURL = "data:image/svg+xml;base64,"+svgBase64;
- 
+	var svgBase64 = ';base64'+Base64.encode(serialzedSVG);
+	var mimeType = "application/octet-stream"; //data:image/svg+xml
+	var dataURL = "data:"+mimeType+","+svgBase64;	
+	
 	delete tmpSVG;
 	return dataURL;
   
