@@ -200,9 +200,16 @@ if(! SVGUtil.Transform) {
                 //SVGSpriteラッパーオブジェクト
                 this._svgElement = document.createElementNS("http://www.w3.org/2000/svg", this.__prefix+"g");
                 this._svgElement.setAttribute("class", "SVGSprite");
+		
+		//透明度調整用エレメント
+		this._oapcityElement = document.createElementNS("http://www.w3.org/2000/svg", this.__prefix+"g");
+		this._oapcityElement.setAttribute("class", "SVGSpriteOpacityWrapper");
+		this._svgTransformUtil.sourceSVGElement.parentNode.replaceChild(this._oapcityElement, this._svgTransformUtil.sourceSVGElement);
+		this._oapcityElement.appendChild(this._svgTransformUtil.sourceSVGElement);
+		
 					   
-				//ラップ
-				this._svgTransformUtil.svgElement.parentNode.replaceChild(this._svgElement, this._svgTransformUtil.svgElement);
+		//ラップ
+		this._svgTransformUtil.svgElement.parentNode.replaceChild(this._svgElement, this._svgTransformUtil.svgElement);
                 this._svgElement.appendChild(this._svgTransformUtil.svgElement);
 
                 /**
@@ -210,8 +217,9 @@ if(! SVGUtil.Transform) {
                  * @return {SVGElement}
                  */
                 this.sourceSVGElement = _svgElement;
-                
-                /**
+		
+               
+	        /**
                 * ボタンモード
                 * @return {Boolean}
                 */
@@ -258,7 +266,9 @@ if(! SVGUtil.Transform) {
       */
     SVGSprite.DisplayObject.prototype._getViewPortScaleX = function(){
         
-        return this._svgElement.nearestViewportElement.width.baseVal.value/this._svgElement.nearestViewportElement.viewBox.baseVal.width;
+	var viewBoxWidth = this._svgElement.nearestViewportElement.viewBox.baseVal.width;
+	var viewportWidth = this._svgElement.nearestViewportElement.width.baseVal.value;
+        return (viewBoxWidth==0)? 1 : viewportWidth/viewBoxWidth;
 
     }
 
@@ -289,9 +299,11 @@ if(! SVGUtil.Transform) {
       *
       */
     SVGSprite.DisplayObject.prototype._getViewPortScaleY = function(){
-        
-        return this._svgElement.nearestViewportElement.height.baseVal.value/this._svgElement.nearestViewportElement.viewBox.baseVal.height;
-
+	
+	var viewBoxHeight = this._svgElement.nearestViewportElement.viewBox.baseVal.height;
+	var viewportHeight = this._svgElement.nearestViewportElement.height.baseVal.value;
+        return (viewBoxHeight==0)? 1 : viewportHeight/viewBoxHeight;
+	
     }
 
     /**
@@ -465,7 +477,7 @@ if(! SVGUtil.Transform) {
      */
     SVGSprite.DisplayObject.prototype._getAlpha = function() {
         
-        var _alpha = this.svgElement.getAttribute('opacity');
+        var _alpha = this._oapcityElement.getAttribute('opacity');
         return  Number((typeof _alpha === 'string')? _alpha : 1);
     }
 
@@ -479,7 +491,7 @@ if(! SVGUtil.Transform) {
             
             var _alpha = Number(alpha);
             if(0 <= _alpha && _alpha <= 1) {
-                this.svgElement.setAttribute('opacity', _alpha);
+                this._oapcityElement.setAttribute('opacity', _alpha);
             }
         
         },
@@ -604,7 +616,7 @@ if(! SVGUtil.Transform) {
         
         //ドラッグ開始
         SVGSprite.Sprite.drag.startDrag(this);
-
+	
     }
 
     /**
@@ -670,22 +682,22 @@ if(! SVGUtil.Transform) {
         
             that.origMouseX = event.clientX;
             that.origMouseY = event.clientY;
-            
+	                
         }
-            
+	            
         //再描画一時停止
         //var id = that.target.svgElement.ownerSVGElement.suspendRedraw(1000); //Operaの場合 unsuspendRedrawに不具合あり？
         
         //移動
         var x = ((event.clientX-that.origMouseX)/that.target._viewPortScaleX) + that.origX; 
         var y = ((event.clientY-that.origMouseY)/that.target._viewPortScaleY) + that.origY;
-                
+        	
         //移動制限
-        if(that.target._bounds) {
+        if(that.target._bounds != null) {
             x = (x < that.target._bounds.left)? that.target._bounds.left : (x+that.target.width > that.target._bounds.right)? that.target._bounds.right-that.target.width : x;
             y = (y < that.target._bounds.top)? that.target._bounds.top : (y+that.target.height > that.target._bounds.bottom)? that.target._bounds.bottom-that.target.height : y;
         }
-                
+	
         that.target.x = x;
         that.target.y = y;
         
