@@ -95,8 +95,9 @@ if(! SVGUtil.Transform) {
     SVGSprite.EventDispatcher.prototype.addEventListener = function(type, listener, useCapture){
 
         useCapture = (useCapture)? true : false;
-        this.svgElement.addEventListener(type, listener, useCapture);
-        
+        //this.svgElement.addEventListener(type, listener, useCapture);
+        this._originalElement.addEventListener(type, listener, useCapture);
+	
     }
 
 
@@ -113,8 +114,8 @@ if(! SVGUtil.Transform) {
     SVGSprite.EventDispatcher.prototype.removeEventListener = function(type, listener, useCapture){
 
         useCapture = (useCapture)? true : false;
-        this.svgElement.removeEventListener(type, listener, useCapture);
-        
+        //this.svgElement.removeEventListener(type, listener, useCapture);
+        this._originalElement.removeEventListener(type, listener, useCapture);
     }
      
     /**
@@ -196,6 +197,9 @@ if(! SVGUtil.Transform) {
 					   
                 //transform用ユーティリティ
                 this._svgTransformUtil = new SVGUtil.Transform(_svgElement);
+		
+		//originalElement
+		this._originalElement = this._svgTransformUtil.sourceSVGElement;
                 
                 //SVGSpriteラッパーオブジェクト
                 this._svgElement = document.createElementNS("http://www.w3.org/2000/svg", this.__prefix+"g");
