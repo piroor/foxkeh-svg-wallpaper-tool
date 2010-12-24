@@ -227,7 +227,9 @@ h1 {
 
 #partsControll .upIndexControll,
 #partsControll .downIndexControll,
-#partsControll .removeControll
+#partsControll .removeControll,
+#partsControll .flipHorizontallyControll,
+#partsControll .flipVerticallyControll
 {
 	position: relative;
 	top: -4px;

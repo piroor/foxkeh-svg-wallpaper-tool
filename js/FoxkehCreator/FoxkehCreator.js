@@ -907,6 +907,8 @@
               //this.scaleControll.slider("enable").slider( "value" , parts.scale);
               this.alphaControll.slider("enable").slider( "value" , parts.alpha);
               //this.rotationControll.slider("enable").slider( "value" , parts.rotation);
+	      this.flipHorizontallyControll.button("enable");
+	      this.flipVerticallyControll.button("enable");
               this.upIndexControll.button("enable");
               this.downIndexControll.button("enable");
               this.removeControll.button("enable");
@@ -922,6 +924,8 @@
        //this.scaleControll.slider("disable");
        this.alphaControll.slider("disable");
        //this.rotationControll.slider("disable");
+       this.flipHorizontallyControll.button("disable");
+       this.flipVerticallyControll.button("disable");
        this.upIndexControll.button("disable");
        this.downIndexControll.button("disable");
        this.removeControll.button("disable");
@@ -958,6 +962,16 @@
        /*partsControllView.rotationControll.bind( "slide", function(event, ui) {
               self.wallpaper.activeParts.rotation = ui.value;
        });*/
+       partsControllView.flipVerticallyControll.bind("click", function(){
+	    if(partsControllView.isEnable) {
+		self.wallpaper.activeParts.scaleX *= -1;
+	    }
+       });
+       partsControllView.flipHorizontallyControll.bind("click", function(){
+	    if(partsControllView.isEnable) {
+		self.wallpaper.activeParts.scaleY *= -1;
+	    }
+       });      
        partsControllView.upIndexControll.bind("click", function(){
               if(partsControllView.isEnable) {
                      self.wallpaper.upPartsIndex(self.wallpaper.activeParts);
