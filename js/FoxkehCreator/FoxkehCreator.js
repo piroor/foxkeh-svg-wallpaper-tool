@@ -965,11 +965,13 @@
        partsControllView.flipVerticallyControll.bind("click", function(){
 	    if(partsControllView.isEnable) {
 		self.wallpaper.activeParts.scaleX *= -1;
+		self.wallpaper._refresh();
 	    }
        });
        partsControllView.flipHorizontallyControll.bind("click", function(){
 	    if(partsControllView.isEnable) {
 		self.wallpaper.activeParts.scaleY *= -1;
+		self.wallpaper._refresh();
 	    }
        });      
        partsControllView.upIndexControll.bind("click", function(){

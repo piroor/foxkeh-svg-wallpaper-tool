@@ -114,8 +114,8 @@
         var _scaleBox = this._scaleBox;
         //_scaleBox.setAttribute("x", (this.SVGSprite._svgTransformUtil.origOffset.x+this.origWidth-(boxWidth/3))*this.SVGSprite.scaleX);
         //_scaleBox.setAttribute("y", (this.SVGSprite._svgTransformUtil.origOffset.y+this.origHeight-(boxWidth/3))*this.SVGSprite.scaleX);
-        var _scaleX = (this.SVGSprite._svgTransformUtil.origOffset.x+this.origWidth-(boxWidth*1))*this.SVGSprite.scaleX;
-        var _scaleY = (this.SVGSprite._svgTransformUtil.origOffset.y+this.origHeight-(boxWidth*1))*this.SVGSprite.scaleX;
+        var _scaleX = (this.SVGSprite._svgTransformUtil.origOffset.x+this.origWidth-(boxWidth*.5))*this.SVGSprite.scaleX;
+        var _scaleY = (this.SVGSprite._svgTransformUtil.origOffset.y+this.origHeight-(boxWidth*.5))*this.SVGSprite.scaleX;
         _scaleBox.setAttribute("transform", "scale("+1/this.SVGSprite.scaleX+") translate("+_scaleX+", "+_scaleY+")");
         //_scaleBox.setAttribute("width", boxWidth);
         //_scaleBox.setAttribute("height", boxWidth);
@@ -127,8 +127,8 @@
         var _rotateBox = this._rotateBox;
         //_rotateBox.setAttribute("x", ((this.SVGSprite._svgTransformUtil.origOffset.x-(boxWidth*.6))*(this.SVGSprite.scaleX)));
         //_rotateBox.setAttribute("y", ((this.SVGSprite._svgTransformUtil.origOffset.y-(boxWidth*.6))*(this.SVGSprite.scaleX)));
-        var _rotateX = (this.SVGSprite._svgTransformUtil.origOffset.x-(boxWidth*2.5))*(this.SVGSprite.scaleX);
-        var _rotateY = (this.SVGSprite._svgTransformUtil.origOffset.y-(boxWidth*2.5))*(this.SVGSprite.scaleX);
+        var _rotateX = (this.SVGSprite._svgTransformUtil.origOffset.x-(boxWidth*.8))*(this.SVGSprite.scaleX);
+        var _rotateY = (this.SVGSprite._svgTransformUtil.origOffset.y-(boxWidth*.8))*(this.SVGSprite.scaleX);
         _rotateBox.setAttribute("transform", "scale("+1/this.SVGSprite.scaleX+") translate("+_rotateX+", "+_rotateY+")");
         //_rotateBox.setAttribute("width", boxWidth);
         //_rotateBox.setAttribute("height", boxWidth);
@@ -243,8 +243,8 @@
                 
         if(this._rotation) {
             
-            var clientX = event.clientX-$(this.SVGSprite.svgElement.ownerSVGElement).offset().left;
-            var clientY = event.clientY-$(this.SVGSprite.svgElement.ownerSVGElement).offset().top;
+            var clientX = event.layerX/this.SVGSprite._viewPortScaleX;
+            var clientY = event.layerY/this.SVGSprite._viewPortScaleX;
             
             if(this._rotateInitRotate == null) {
                 
@@ -258,20 +258,20 @@
                         
                         
             //移動量
-            var x = (clientX/this.SVGSprite._viewPortScaleX)-this._rotateOrigX;
-            var y = (clientY/this.SVGSprite._viewPortScaleY)-this._rotateOrigY;
+            var x = (clientX)-this._rotateOrigX;
+            var y = (clientY)-this._rotateOrigY;
             
             var radian = Math.atan2(y,x);
             var rotation = (radian/(Math.PI/180))-this._rotateInitRotate;
             
-	    /*
-            console.log(rotation);
-            
-            this.center.setAttribute("r", 50);
+	    
+            //console.log(rotation);
+            /*
+            this.center.setAttribute("r", 20);
             this.center.setAttribute("cx", this._rotateOrigX);
             this.center.setAttribute("cy", this._rotateOrigY);
             
-            this.point.setAttribute("r", 50);
+            this.point.setAttribute("r", 20);
             this.point.setAttribute("cx", (clientX));
             this.point.setAttribute("cy", (clientY));
             this.point.setAttribute("fill", "#f00");
