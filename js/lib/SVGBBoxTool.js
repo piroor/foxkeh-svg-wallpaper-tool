@@ -29,12 +29,12 @@
             rotation: (typeof options.rotation == "boolean")? options.rotation : true
         }
         
-        /*
+        
         this.center = document.createElementNS("http://www.w3.org/2000/svg", "circle");
         this.point = document.createElementNS("http://www.w3.org/2000/svg", "circle");
         this.SVGSprite.svgElement.ownerSVGElement.appendChild(this.center);
         this.SVGSprite.svgElement.ownerSVGElement.appendChild(this.point);
-        */
+        
         
         //初期化
         this.init();
@@ -77,12 +77,16 @@
         var self = this;
         this._scaleBox.addEventListener("mousedown", function(e){ self._startScale(); }, false);
         this._rotateBox.addEventListener("mousedown", function(e){ self._startRotate(); }, false);
-        
-        this.SVGSprite.svgElement.ownerSVGElement.addEventListener("mousemove", function(e){
+        	
+	//this.SVGSprite.svgElement.ownerSVGElement.addEventListener("mousemove", function(e){
+	window.addEventListener("mousemove", function(e){
+	    
             self._doScale(e);
             self._doRotate(e);
-        }, true);
-        window.addEventListener('mouseup', function(e){
+        
+	}, true);
+        
+	window.addEventListener('mouseup', function(e){
             
             self._endScale();
             self._endRotate();
@@ -110,24 +114,27 @@
         var _scaleBox = this._scaleBox;
         //_scaleBox.setAttribute("x", (this.SVGSprite._svgTransformUtil.origOffset.x+this.origWidth-(boxWidth/3))*this.SVGSprite.scaleX);
         //_scaleBox.setAttribute("y", (this.SVGSprite._svgTransformUtil.origOffset.y+this.origHeight-(boxWidth/3))*this.SVGSprite.scaleX);
-        var _scaleX = (this.SVGSprite._svgTransformUtil.origOffset.x+this.origWidth-(boxWidth*.3))*this.SVGSprite.scaleX;
-        var _scaleY = (this.SVGSprite._svgTransformUtil.origOffset.y+this.origHeight-(boxWidth*.3))*this.SVGSprite.scaleX;
+        var _scaleX = (this.SVGSprite._svgTransformUtil.origOffset.x+this.origWidth-(boxWidth*1))*this.SVGSprite.scaleX;
+        var _scaleY = (this.SVGSprite._svgTransformUtil.origOffset.y+this.origHeight-(boxWidth*1))*this.SVGSprite.scaleX;
         _scaleBox.setAttribute("transform", "scale("+1/this.SVGSprite.scaleX+") translate("+_scaleX+", "+_scaleY+")");
         //_scaleBox.setAttribute("width", boxWidth);
         //_scaleBox.setAttribute("height", boxWidth);
         //_scaleBox.setAttribute("style", "opacity:1; fill:#fff; stroke:#000; stroke-width:"+(.5/this.SVGSprite.scaleX)+"; stroke-linejoin:round;cursor:se-resize");
+        _scaleBox.setAttribute("style", "cursor:se-resize");
         
         
         //回転
         var _rotateBox = this._rotateBox;
         //_rotateBox.setAttribute("x", ((this.SVGSprite._svgTransformUtil.origOffset.x-(boxWidth*.6))*(this.SVGSprite.scaleX)));
         //_rotateBox.setAttribute("y", ((this.SVGSprite._svgTransformUtil.origOffset.y-(boxWidth*.6))*(this.SVGSprite.scaleX)));
-        var _rotateX = (this.SVGSprite._svgTransformUtil.origOffset.x-(boxWidth*1.3))*(this.SVGSprite.scaleX);
-        var _rotateY = (this.SVGSprite._svgTransformUtil.origOffset.y-(boxWidth*1.3))*(this.SVGSprite.scaleX);
+        var _rotateX = (this.SVGSprite._svgTransformUtil.origOffset.x-(boxWidth*2.5))*(this.SVGSprite.scaleX);
+        var _rotateY = (this.SVGSprite._svgTransformUtil.origOffset.y-(boxWidth*2.5))*(this.SVGSprite.scaleX);
         _rotateBox.setAttribute("transform", "scale("+1/this.SVGSprite.scaleX+") translate("+_rotateX+", "+_rotateY+")");
         //_rotateBox.setAttribute("width", boxWidth);
         //_rotateBox.setAttribute("height", boxWidth);
         //_rotateBox.setAttribute("style", "opacity:1; fill:#eee; stroke:#000; stroke-width:"+(.5/this.SVGSprite.scaleX)+"; stroke-linejoin:round;cursor:pointer");
+        _rotateBox.setAttribute("style", "cursor:pointer");
+
     };
 
     /**
@@ -172,16 +179,15 @@
         this._scaleOrigWidth = this.SVGSprite.width;
         this._scaleOrigHeight = this.SVGSprite.height;
         
-
     };
     
     /**
      * 拡大縮小中
      */
     SVGBBoxTool.prototype._doScale = function(event) {
-                
+        	   
         if(this._scaling) {
-            
+            	    
             //マウスの初期位置設定
             if(this.origMouseX == null) {
             
@@ -198,7 +204,8 @@
             _scale = (x<0||y<0)? -_scale : _scale;
             
             this.SVGSprite.width = this._scaleOrigWidth+_scale;
-            this.SVGSprite.height = this._scaleOrigWidth+_scale;
+	    this.SVGSprite.scaleY = this.SVGSprite.scaleX;
+            //this.SVGSprite.height = this._scaleOrigHeight+_scale;
             
             this._setBoxes();
                         
@@ -236,8 +243,8 @@
                 
         if(this._rotation) {
             
-            var clientX = event.layerX-$(this.SVGSprite.svgElement.ownerSVGElement).offset().left;
-            var clientY = event.layerY-$(this.SVGSprite.svgElement.ownerSVGElement).offset().top;
+            var clientX = event.clientX-$(this.SVGSprite.svgElement.ownerSVGElement).offset().left;
+            var clientY = event.clientY-$(this.SVGSprite.svgElement.ownerSVGElement).offset().top;
             
             if(this._rotateInitRotate == null) {
                 
@@ -255,20 +262,20 @@
             var y = (clientY/this.SVGSprite._viewPortScaleY)-this._rotateOrigY;
             
             var radian = Math.atan2(y,x);
-            var rotation = radian/(Math.PI/180)-this._rotateInitRotate;
+            var rotation = (radian/(Math.PI/180))-this._rotateInitRotate;
             
-            /*
+	    /*
             console.log(rotation);
             
-            this.center.setAttribute("r", 5);
+            this.center.setAttribute("r", 50);
             this.center.setAttribute("cx", this._rotateOrigX);
             this.center.setAttribute("cy", this._rotateOrigY);
             
-            this.point.setAttribute("r", 5);
+            this.point.setAttribute("r", 50);
             this.point.setAttribute("cx", (clientX));
             this.point.setAttribute("cy", (clientY));
             this.point.setAttribute("fill", "#f00");
-            */
+	    */
             
             this.SVGSprite.rotation = this._rotateOrigRotation+rotation;
             
@@ -283,7 +290,7 @@
      * 回転完了
      */
     SVGBBoxTool.prototype._endRotate = function() {
-        
+        	
         this._rotation = false;
         this._rotateInitRotate = null;
         

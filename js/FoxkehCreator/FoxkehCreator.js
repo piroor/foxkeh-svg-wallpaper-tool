@@ -206,7 +206,7 @@
         this.svg.appendChild(this._copyrightLayer);
 
 	//mousedown を無効化して、不要なドラッグを防止
-	this.svg.addEventListener("mousedown", function(e){e.preventDefault();}, false);
+	//this.svg.addEventListener("mousedown", function(e){e.preventDefault();}, false);
 
        //ドラッグ時にゴミが残ってしまう問題対策
        var self = this;
@@ -629,6 +629,9 @@
        
        this.buttonMode = true;
  
+       //BBoxTool
+       this.SVGBBoxTool = null;//new SVGBBoxTool(this);
+ 
        //イベント処理
        var self = this;
        this.addEventListener("mousedown", function(){ self.activate(); }, false);
@@ -642,6 +645,23 @@
        this._svgElement = svgElement;
      
  };
+ 
+/**
+ * 子要素として追加する
+ *
+ * @param {SVGElement} content 追加先の要素
+ *
+ */
+ FoxkehCreator.Parts.prototype.appendTo = function(content) {
+
+	content.appendChild(this.svgElement);
+	
+	if(this.SVGBBoxTool == null) {
+            this.SVGBBoxTool = new SVGBBoxTool(this);
+	}
+	
+};
+
  
  //scale
  defineSetterGetter(FoxkehCreator.Parts.prototype, "scale",
@@ -668,6 +688,7 @@
  FoxkehCreator.Parts.prototype.activate = function() {
 	 
        if(!this.active) {
+	
               var self = this;
               this.setStartDrag();
               
@@ -675,6 +696,9 @@
                      self.setStartDrag(); 
               });
               
+	      //BBoxToolを有効に
+	      this.SVGBBoxTool.enable();
+	      
               $(this).trigger("activated");
        }
        
@@ -687,6 +711,9 @@
 	
        if(this.active) {
               
+	      //BBoxToolwを無効に
+	      this.SVGBBoxTool.disable();
+	      
               this.active = false;
               $(this).trigger("deactivated");
                      
@@ -785,12 +812,14 @@
        
        //要素作成
        var html = '<dl>';
-       html +=	'<dt>Reduce/Enlarge :</dt>';
-       html +=	'<dd><div class="scaleControll"></div></dd>';
+       //html +=	'<dt>Reduce/Enlarge :</dt>';
+       //html +=	'<dd><div class="scaleControll"></div></dd>';
        html +=	'<dt>Transparency :</dt>';
        html +=	'<dd><div class="alphaControll"></div></dd>';
-       html +=	'<dt>Rotation :</dt>';
-       html +=	'<dd><div class="rotationControll"></div></dd>';
+       //html +=	'<dt>Rotation :</dt>';
+       //html +=	'<dd><div class="rotationControll"></div></dd>';
+       html +=	'<dt>Flip :</dt>';
+       html +=	'<dd><div class="flipHorizontallyControll"></div><div class="flipVerticallyControll"></div></dd>';
        html +=	'<dt>Ordering/Delete :</dt>';
        html +=	'<dd><div class="upIndexControll"></div><div class="downIndexControll"></div><div title="remove element" class="removeControll"></div></dd>';
        html +=	'</dl>';
@@ -799,9 +828,23 @@
        this.parentElement.html(html);
        
        //コントローラー初期化
-       this.scaleControll = this._createSlider("scaleControll",options.scale);
+       //this.scaleControll = this._createSlider("scaleControll",options.scale);
        this.alphaControll = this._createSlider("alphaControll",options.alpha);
-       this.rotationControll = this._createSlider("rotationControll",options.rotation);
+       //this.rotationControll = this._createSlider("rotationControll",options.rotation);
+       this.flipHorizontallyControll = this.parentElement.find(".flipHorizontallyControll").button({
+            icons: {
+                primary: "ui-icon-triangle-2-n-s"
+            },
+            text: false,
+            disabled: true
+       });       
+       this.flipVerticallyControll = this.parentElement.find(".flipVerticallyControll").button({
+            icons: {
+                primary: "ui-icon-triangle-2-e-w"
+            },
+            text: false,
+            disabled: true
+       });       
        this.upIndexControll = this.parentElement.find(".upIndexControll").button({
             icons: {
                 primary: "ui-icon-circle-triangle-n"
@@ -861,9 +904,9 @@
               
               var parts = this.wallpaper.activeParts;
               
-              this.scaleControll.slider("enable").slider( "value" , parts.scale);
+              //this.scaleControll.slider("enable").slider( "value" , parts.scale);
               this.alphaControll.slider("enable").slider( "value" , parts.alpha);
-              this.rotationControll.slider("enable").slider( "value" , parts.rotation);
+              //this.rotationControll.slider("enable").slider( "value" , parts.rotation);
               this.upIndexControll.button("enable");
               this.downIndexControll.button("enable");
               this.removeControll.button("enable");
@@ -876,9 +919,9 @@
  //無効
  FoxkehCreator.PartsControllView.prototype.disable = function() {
        
-       this.scaleControll.slider("disable");
+       //this.scaleControll.slider("disable");
        this.alphaControll.slider("disable");
-       this.rotationControll.slider("disable");
+       //this.rotationControll.slider("disable");
        this.upIndexControll.button("disable");
        this.downIndexControll.button("disable");
        this.removeControll.button("disable");
@@ -906,15 +949,15 @@
        var self = this;
        
        //イベント処理
-       partsControllView.scaleControll.bind( "slide", function(event, ui) {
+       /*partsControllView.scaleControll.bind( "slide", function(event, ui) {
               self.wallpaper.activeParts.scale = ui.value;
-       });
+       });*/
        partsControllView.alphaControll.bind( "slide", function(event, ui) {
               self.wallpaper.activeParts.alpha = ui.value;
        });
-       partsControllView.rotationControll.bind( "slide", function(event, ui) {
+       /*partsControllView.rotationControll.bind( "slide", function(event, ui) {
               self.wallpaper.activeParts.rotation = ui.value;
-       });
+       });*/
        partsControllView.upIndexControll.bind("click", function(){
               if(partsControllView.isEnable) {
                      self.wallpaper.upPartsIndex(self.wallpaper.activeParts);

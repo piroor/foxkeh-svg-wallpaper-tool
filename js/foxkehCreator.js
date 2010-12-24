@@ -37,13 +37,13 @@
                                    }],
                               
                               //拡大縮小の設定値
-                              scaleOptions: {min: -10, max: 10, step: 0.1},
+                              //scaleOptions: {min: 0.1, max: 10, step: 0.1},
                               
                               //透明度の設定値
-                              alphaOptions: {min: 0, max: 1, step: 0.05},
+                              alphaOptions: {min: 0.1, max: 1, step: 0.05},
                               
                               //回転度の設定値
-                              rotationOptions: {min: -180, max: 180, step: 0.1},
+                              //rotationOptions: {min: -180, max: 180, step: 0.1},
                               
                               //壁紙サイズ選択要素ID名
                               sizeSelector: "sizeSelect",

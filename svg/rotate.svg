@@ -14,15 +14,12 @@
   <defs
      id="defs3761">
     
-<g
-     transform="translate(0,-6)"
-     id="rotate">
+<g id="rotate">
     <rect
        width="20"
        height="20"
        x="0"
        y="0"
-       transform="translate(0,6)"
        id="rect3767"
        style="color:#000000;fill:#ffffff;stroke:#000000;stroke-width:0.5" />
     <path
@@ -54,30 +51,5 @@
       </cc:Work>
     </rdf:RDF>
   </metadata>
-  <g
-     transform="translate(0,-6)"
-     id="layer1">
-    <rect
-       width="20"
-       height="20"
-       x="0"
-       y="0"
-       transform="translate(0,6)"
-       id="rect3767"
-       style="color:#000000;fill:#ffffff;stroke:#000000;stroke-width:0.5" />
-    <path
-       d="m 8.4005759,8.3507412 -4.1659224,-10e-8 -4.16592245,0 L 2.1516922,4.7429466 4.2346535,1.1351519 6.3176146,4.7429464 z"
-       transform="matrix(0,0.73507853,-0.73507853,0,19.836613,7.6490556)"
-       id="path5095"
-       style="color:#000000;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.505;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
-    <path
-       d="m 8.4005759,8.3507412 -4.1659224,-10e-8 -4.16592245,0 L 2.1516922,4.7429466 4.2346535,1.1351519 6.3176146,4.7429464 z"
-       transform="matrix(-0.73507853,0,0,-0.73507853,7.6878788,25.768073)"
-       id="path5108"
-       style="color:#000000;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.505;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
-    <path
-       d="m 4.3217759,21.80785 c 0,-6.426081 4.9898167,-11.635449 11.1450671,-11.635449"
-       id="path5167"
-       style="color:#000000;fill:none;stroke:#000000;stroke-width:0.40038314;stroke-opacity:1;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
-  </g>
+  
 </svg>
