@@ -1098,8 +1098,11 @@
 		
 		} else if(svgDropBox.fileType == "image") {
 		    
+		    var width = svgDropBox.contentElement.naturalWidth;
+		    var height = svgDropBox.contentElement.naturalHeight;
+		    
 		    svgString  = '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">';
-		    svgString += '<image xlink:href="'+svgDropBox.content+'" width="300" height="300" />';
+		    svgString += '<image xlink:href="'+svgDropBox.content+'" width="'+width+'" height="'+height+'" />';
 		    svgString += '</svg>';
 		    
 		    var parser = new DOMParser();  

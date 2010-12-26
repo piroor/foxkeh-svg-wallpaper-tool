@@ -214,6 +214,7 @@
         this.element.appendChild(container);
 	this.element.className = self.className+" SVGDropBOXDroped";
 	
+	this.contentElement = contentElement;
         this.container = container;
         this.content = result;
         
