@@ -504,20 +504,35 @@
  
 	 var self = this;
 	 
-         var index = this._addLoadingObjects(param.file);
-         
-	 SVGUtil.loadSVG(param.file, function(svg){
-                
-	      var parts = new FoxkehCreator.Parts(svg);
-		
-	      var viewBox = self.getViewBox();
-	      parts.x = viewBox.width/2;
-	      parts.y = viewBox.height/2;
-	      self.addParts(parts);
-                
-              self._removeLoadingObjects(index); 
-	
-	});
+	 if(typeof param.svgElement != "undefined" && param.svgElement instanceof SVGElement) {
+	    
+	    var parts = new FoxkehCreator.Parts(param.svgElement);
+	    var viewBox = self.getViewBox();
+	    
+	    var viewBox = this.getViewBox();
+	    parts.x = viewBox.width/2;
+	    parts.y = viewBox.height/2;
+	    this.addParts(parts);
+	    
+	    
+	    
+	 } else {
+	    var index = this._addLoadingObjects(param.file);
+	    
+	    SVGUtil.loadSVG(param.file, function(svg){
+		   
+		 var parts = new FoxkehCreator.Parts(svg);
+		   
+		 var viewBox = self.getViewBox();
+		 parts.x = viewBox.width/2;
+		 parts.y = viewBox.height/2;
+		 self.addParts(parts);
+		   
+		 self._removeLoadingObjects(index); 
+	   
+	   });
+	    
+	}
 		
  
  };
@@ -1005,7 +1020,10 @@
   */
  FoxkehCreator.PartsListView = function(partsList) {
 	
-	this.list = $(partsList).find("> li a");
+	this.partsListElement = $(partsList);
+	this.list = this.partsListElement.find("> li a");
+
+	this.init();
 	
 	//イベント処理
 	var self = this;
@@ -1013,8 +1031,38 @@
  
  };
  
- FoxkehCreator.PartsListView.prototype.select = function(selectedList) {
+ FoxkehCreator.PartsListView.prototype.init = function() {
+
+    this.appendSVGDropBox();
+
+ };
+ 
+ FoxkehCreator.PartsListView.prototype.appendSVGDropBox = function() {
+
+    var svgDropBox = new SVGDropBox({width:70, height:70});
+    var list = document.createElement("li");
+    list.appendChild(svgDropBox.element);
+    this.partsListElement.append(list);
+    
+    //イベント処理
+    var self = this;
+    $(list).click(function(){ self.select(svgDropBox,true); });
+    svgDropBox.element.addEventListener("drop",function(e){
 	
+	e.stopPropagation();
+        e.preventDefault();
+	
+	if(typeof svgDropBox.content == "undefined") {
+	    self.appendSVGDropBox();   
+	}
+	
+    }, false);
+    
+ };
+ 
+ FoxkehCreator.PartsListView.prototype.select = function(selectedList,isSVGDropBox) {
+	
+	this.selectedListIsSVGDropBox = (typeof isSVGDropBox == "boolean")? isSVGDropBox : false;
 	this.selected = selectedList;
 	$(this).trigger("selected");
  
@@ -1036,9 +1084,57 @@
  
  FoxkehCreator.PartsListController.prototype.selectedHandler = function() {
 	
-	var url = $(this.partsListView.selected).attr("href");
-	this.wallpaper.loadParts({file: url});
- 
+	if(this.partsListView.selectedListIsSVGDropBox) {
+	    
+	    var svgDropBox = this.partsListView.selected;
+	    
+	    if(typeof svgDropBox.fileType != "undefined") {
+		
+		var svgElement;
+		
+		if(svgDropBox.fileType == "svg") {
+		
+		    svgElement = document.importNode(svgDropBox.content, true);
+		
+		} else if(svgDropBox.fileType == "image") {
+		    
+		    svgString  = '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">';
+		    svgString += '<image xlink:href="'+svgDropBox.content+'" width="300" height="300" />';
+		    svgString += '</svg>';
+		    
+		    var parser = new DOMParser();  
+		    var svgDoc = parser.parseFromString(svgString, "text/xml");
+		    
+		    var svgElement = document.importNode(svgDoc.getElementsByTagName("svg")[0], true);
+		    
+		    /*
+		    svgElement = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+		    svgElement.setAttribute("xmlns","http://www.w3.org/2000/svg");
+		    svgElement.setAttribute("xmlns:link","http://www.w3.org/1999/xlink");
+		    
+		    var rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+		    rect.setAttribute("width", 50);
+		    rect.setAttribute("height", 50);
+		    
+		    var image = document.createElementNS("http://www.w3.org/2000/svg", "image");
+		    image.setAttribute("xlink:href", svgDropBox.content);
+		    image.setAttribute("width", 300);
+		    image.setAttribute("height", 300);
+		    
+		    svgElement.appendChild(rect);
+		    svgElement.appendChild(image);
+		    */
+		    
+		}
+		
+		this.wallpaper.loadParts({svgElement: svgElement});
+		
+	    }
+	    
+	} else {
+	    var url = $(this.partsListView.selected).attr("href");
+	    this.wallpaper.loadParts({file: url});
+	}
  };
  
  /**
