@@ -1,5 +1,5 @@
 /*!
- * Copyright 2010, Mozilla Japan.
+ * Copyright 2010-2011, Mozilla Japan.
  * Dual licensed under the MIT or GPL Version 3 licenses.
  * https://bitbucket.org/foxkeh/wallpaper/src/tip/MIT-LICENSE.txt
  * https://bitbucket.org/foxkeh/wallpaper/src/tip/GPL-LICENSE.txt
@@ -1052,7 +1052,7 @@
 	e.stopPropagation();
         e.preventDefault();
 	
-	if(typeof svgDropBox.content == "undefined") {
+	if(svgDropBox.validFile) {
 	    self.appendSVGDropBox();   
 	}
 	

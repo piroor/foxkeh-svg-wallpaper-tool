@@ -1,3 +1,14 @@
+/*!
+ * Copyright 2010-2011, Mozilla Japan.
+ * Dual licensed under the MIT or GPL Version 3 licenses.
+ * https://bitbucket.org/foxkeh/wallpaper/src/tip/MIT-LICENSE.txt
+ * https://bitbucket.org/foxkeh/wallpaper/src/tip/GPL-LICENSE.txt
+ *
+ * Includes Modernizr v1.6
+ * http://www.modernizr.com
+ * Copyright (c) 2009-2010
+ * Dual-licensed under the BSD or MIT licenses.
+ */
 (function(global){
  
     var SVGDropBox = function(option){
@@ -5,6 +16,7 @@
         option = option || {};
         this.imageWidth = option.width || 100;
         this.imageHeight = option.height || 100;
+	this.validFile = false;
         
         this.init();
     };
@@ -15,7 +27,10 @@
         png : "image/jpeg",
         gif : "image/gif"
     };
-        
+    
+    /**
+     *初期化
+     */
     SVGDropBox.prototype.init = function(){
         
         //ドロップ領域用の要素を作成
@@ -65,8 +80,10 @@
                 
                 //ファイルのロード
                 if(files.length > 0) {
+		    
                     self.loadFile(files[0]);
-                }
+		
+		}
                 
             },false);
             
@@ -97,8 +114,11 @@
      
     };
     
+    /**
+     * via Modernizr v1.6
+     */
     SVGDropBox.prototype.isDropSupported = function(){
-
+	
         var element = document.createElement('div');
         var eventName = 'ondrop';
 
@@ -142,24 +162,33 @@
     
     SVGDropBox.prototype.loadFile = function(file) {
         
-        this.fileType = this.isSVG(file)? "svg" : this.isImage(file)? "image" : "other";
-        
-        var reader = new FileReader();
-        
-        var self = this;
-        reader.addEventListener("load", function(e){ self.onFileLoaded(e);},false);
-        
-        if(this.fileType=="svg") {
-            
-            reader.readAsText(file, "utf-8");
-            
-        } else if(this.fileType=="image"){
-            
-            reader.readAsDataURL(file);
-            
-        }
-        
-                
+	//サイズが0byteだった場合は処理をしない Firefox3.6のバグ対策
+	if(file.size > 0) {
+	
+	    //ファイルタイプを判別
+	    this.fileType = this.isSVG(file)? "svg" : this.isImage(file)? "image" : "other";
+	    
+	    console.log(this.fileType);
+	    
+	    var reader = new FileReader();
+	    
+	    var self = this;
+	    reader.addEventListener("load", function(e){ self.onFileLoaded(e);},false);
+	    
+	    if(this.fileType=="svg") {
+		
+		reader.readAsText(file, "utf-8");
+		this.validFile = true;
+		
+	    } else if(this.fileType=="image"){
+		
+		reader.readAsDataURL(file);
+		this.validFile  = true;
+		
+	    }
+	    
+	}
+	
     };
     
     SVGDropBox.prototype.onFileLoaded = function(e) {
