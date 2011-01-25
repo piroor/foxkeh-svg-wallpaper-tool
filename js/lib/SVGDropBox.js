@@ -167,9 +167,7 @@
 	
 	    //ファイルタイプを判別
 	    this.fileType = this.isSVG(file)? "svg" : this.isImage(file)? "image" : "other";
-	    
-	    console.log(this.fileType);
-	    
+	    	    
 	    var reader = new FileReader();
 	    
 	    var self = this;
