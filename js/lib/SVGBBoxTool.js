@@ -58,19 +58,57 @@
         
         //拡大縮小ボックス
         var _scaleBox = document.createElementNS("http://www.w3.org/2000/svg", "g");
-        var _scaleBoxSVG = document.createElementNS("http://www.w3.org/2000/svg", "use");
+	/*var _scaleBoxSVG = document.createElementNS("http://www.w3.org/2000/svg", "use");
         _scaleBoxSVG.setAttributeNS("http://www.w3.org/1999/xlink","xlink:href","svg/scale.svg#scale");
         _scaleBoxSVG.setAttribute("transform", "scale("+1/this.SVGSprite._viewPortScaleX+")");
-        _scaleBox.appendChild(_scaleBoxSVG);
+	_scaleBox.appendChild(_scaleBoxSVG);
+	*/
+	var _scaleSVGSrc = '<svg xmlns="http://www.w3.org/2000/svg">';
+	_scaleSVGSrc += '<g id="scale">';
+	_scaleSVGSrc += '<rect width="20" height="20" x="0" y="0" style="color:#000000;fill:#ffffff;stroke:#000000;stroke-width:0.5" />';
+	_scaleSVGSrc += '<g transform="translate(0, -6)">';
+	_scaleSVGSrc += '<path d="M 4.730198,11.40495 15.722277,22.397029" style="fill:none;stroke:#000000;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />';
+	_scaleSVGSrc += '<path d="m 8.4005759,8.3507412 -4.1659224,-10e-8 -4.16592245,0 L 2.1516922,4.7429466 4.2346535,1.1351519 6.3176146,4.7429464 z" ';
+	_scaleSVGSrc += 'transform="matrix(0.51977901,-0.51977901,0.51977901,0.51977901,-0.95968357,9.9839171)" ';
+	_scaleSVGSrc += 'style="color:#000000;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.505;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />';
+	_scaleSVGSrc += '<path d="m 8.4005759,8.3507412 -4.1659224,-10e-8 -4.16592245,0 L 2.1516922,4.7429466 4.2346535,1.1351519 6.3176146,4.7429464 z" ';
+	_scaleSVGSrc += 'transform="matrix(-0.51977901,0.51977901,-0.51977901,-0.51977901,20.372362,22.713437)" ';
+	_scaleSVGSrc += 'style="color:#000000;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.505;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />';
+	_scaleSVGSrc += '</g>';
+	_scaleSVGSrc += '</g>';
+	_scaleSVGSrc += '</svg>';
+	var parser = new DOMParser()
+	var _scaleSVGXML = parser.parseFromString(_scaleSVGSrc, "text/xml");
+	var _scaleSVG = document.adoptNode(_scaleSVGXML.getElementById("scale"));
+	_scaleSVG.setAttribute("transform", "scale("+1/this.SVGSprite._viewPortScaleX+")");
+	_scaleBox.appendChild(_scaleSVG);
         this._scaleBox = _scaleBox;
         
         //回転ボックス
         var _rotateBox = document.createElementNS("http://www.w3.org/2000/svg", "g");
-        var _rotateBoxSVG = document.createElementNS("http://www.w3.org/2000/svg", "use");
-        _rotateBoxSVG.setAttribute("transform", "scale("+1/this.SVGSprite._viewPortScaleX+")");
-        _rotateBoxSVG.setAttributeNS("http://www.w3.org/1999/xlink","xlink:href","svg/rotate.svg#rotate");
-        _rotateBox.appendChild(_rotateBoxSVG);
-        this._rotateBox = _rotateBox;
+        //var _rotateBoxSVG = document.createElementNS("http://www.w3.org/2000/svg", "use");
+        //_rotateBoxSVG.setAttribute("transform", "scale("+1/this.SVGSprite._viewPortScaleX+")");
+        //_rotateBoxSVG.setAttributeNS("http://www.w3.org/1999/xlink","xlink:href","svg/rotate.svg#rotate");
+        //_rotateBox.appendChild(_rotateBoxSVG);
+	var _rotateSVGSrc = '<svg xmlns="http://www.w3.org/2000/svg">';
+	_rotateSVGSrc += '<g id="rotate">';
+	_rotateSVGSrc += '<rect width="20" height="20" x="0" y="0" style="color:#000000;fill:#ffffff;stroke:#000000;stroke-width:0.5" />';
+	_rotateSVGSrc += '<g transform="translate(0, -6)">';
+	_rotateSVGSrc += '<path d="m 8.4005759,8.3507412 -4.1659224,-10e-8 -4.16592245,0 L 2.1516922,4.7429466 4.2346535,1.1351519 6.3176146,4.7429464 z"';
+	_rotateSVGSrc += '  transform="matrix(0,0.73507853,-0.73507853,0,19.836613,7.6490556)"';
+	_rotateSVGSrc += '  style="color:#000000;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.505;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />';
+	_rotateSVGSrc += '<path d="m 8.4005759,8.3507412 -4.1659224,-10e-8 -4.16592245,0 L 2.1516922,4.7429466 4.2346535,1.1351519 6.3176146,4.7429464 z"';
+	_rotateSVGSrc += '  transform="matrix(-0.73507853,0,0,-0.73507853,7.6878788,25.768073)"';
+	_rotateSVGSrc += '  style="color:#000000;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.505;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />';
+	_rotateSVGSrc += '<path d="m 4.3217759,21.80785 c 0,-6.426081 4.9898167,-11.635449 11.1450671,-11.635449"';
+	_rotateSVGSrc += '  style="color:#000000;fill:none;stroke:#000000;stroke-width:0.40038314;stroke-opacity:1;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />';
+	_rotateSVGSrc += '</g></g>';
+	_rotateSVGSrc += '</svg>';
+	var _rotateSVGXML = (new DOMParser()).parseFromString(_rotateSVGSrc, "text/xml");
+	var _rotateSVG = document.adoptNode(_rotateSVGXML.getElementById("rotate"));
+	_rotateSVG.setAttribute("transform", "scale("+1/this.SVGSprite._viewPortScaleX+")");
+	_rotateBox.appendChild(_rotateSVG);
+	this._rotateBox = _rotateBox;
         
         this._setBoxes();
         
