@@ -563,18 +563,17 @@ if(! SVGUtil.Transform) {
         
 	};
 
-	/**
-	 * 子要素として追加する
-	 *
-	 * @param {SVGElement} content 追加先の要素
-	 *
-	 */
-	SVGSprite.DisplayObjectContainer.prototype.appendTo = function(content) {
+    /**
+    * 子要素として追加する
+    *
+    * @param {SVGElement} content 追加先の要素
+    *
+    */
+    SVGSprite.DisplayObjectContainer.prototype.appendTo = function(content) {
 
-		content.appendChild(this.svgElement);
+	   content.appendChild(this.svgElement);
 
-	};
- 
+    };
  
     /**
      * Sprite を初期化する

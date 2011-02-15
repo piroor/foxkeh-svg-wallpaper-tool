@@ -4,14 +4,8 @@
  * https://bitbucket.org/foxkeh/wallpaper/src/tip/MIT-LICENSE.txt
  * https://bitbucket.org/foxkeh/wallpaper/src/tip/GPL-LICENSE.txt
  */
-/** 
- * @fileOverview SVG要素のtranformy属性を簡単に扱えるようにするためのライブラリ
- * 
+/**
  * @author OFFIBA.com
- * @version 20101021
- *
- * copyright 2010 OFFIBA,inc.
- * Dual licensed under the MIT or GPL Version 3 licenses.
  */
 
 (function(global){
@@ -23,6 +17,8 @@
         //SVGSprite
         this.SVGSprite = SVGSprite;
         
+	this.isSafari = (navigator.userAgent.indexOf("Safari") != -1 && navigator.userAgent.indexOf("Chrome") == -1);
+	
         //オプション
         this.options = {
             scale: (typeof options.scale == "boolean")? options.scale : true,
@@ -113,16 +109,16 @@
         this._setBoxes();
         
         var self = this;
-        this._scaleBox.addEventListener("mousedown", function(e){ self._startScale(); }, false);
-        this._rotateBox.addEventListener("mousedown", function(e){ self._startRotate(); }, false);
+        $(this._scaleBox).mousedown( function(e){ self._startScale(); });
+        $(this._rotateBox).mousedown( function(e){ self._startRotate(); });
         	
 	//this.SVGSprite.svgElement.ownerSVGElement.addEventListener("mousemove", function(e){
-	window.addEventListener("mousemove", function(e){
+	$(window).mousemove(function(e){
 	    
             self._doScale(e);
             self._doRotate(e);
         
-	}, true);
+	});
         
 	window.addEventListener('mouseup', function(e){
             
@@ -227,24 +223,66 @@
         if(this._scaling) {
             	    
             //マウスの初期位置設定
-            if(this.origMouseX == null) {
+            /*if(this.origMouseX == null) {
             
-                this.origMouseX = event.clientX;
-                this.origMouseY = event.clientY;
+                this.origMouseX = event.pageX;
+                this.origMouseY = event.pageY;
                             
-            }
-                        
+            }*/
+
+            /*            
             //移動量
             var x = ((event.clientX-this.origMouseX)/this.SVGSprite._viewPortScaleX);
             var y = ((event.clientY-this.origMouseY)/this.SVGSprite._viewPortScaleY);
-            
             var _scale = Math.sqrt(x*x+y*y); //√(c-a)^2+(d-b)^2
             _scale = (x<0||y<0)? -_scale : _scale;
             
             this.SVGSprite.width = this._scaleOrigWidth+_scale;
 	    this.SVGSprite.scaleY = this.SVGSprite.scaleX;
-            //this.SVGSprite.height = this._scaleOrigHeight+_scale;
+            this.SVGSprite.height = this._scaleOrigHeight+_scale;
+	    */
+	    
+	    if(this.origMouseX == null) {
+		
+		this.origScreenCTM = this.SVGSprite._svgTransformUtil.transformWrapper.getScreenCTM();
+	    
+	    }
+	    
+	    var x = (this.isSafari)? event.pageX : event.pageX-$(window).scrollLeft();
+	    var y = (this.isSafari)? event.pageY : event.pageY-$(window).scrollTop();
+	    
+	    var ctm = this.origScreenCTM;
+			
+	    var p = this.SVGSprite.svgElement.ownerSVGElement.createSVGPoint();
+	    p.x = x;
+	    p.y = y;
+	    p = p.matrixTransform(ctm.inverse());
+	    
+            if(this.origMouseX == null) {
             
+                this.origMouseX = p.x;
+		this.origScaleX = this.SVGSprite.scaleX;
+		this.origFlipped = ((this.SVGSprite.scaleY<0 && this.origScaleX>0) || (this.SVGSprite.scaleY>0 && this.origScaleX<0));
+		
+            }
+	    
+	    //var cp = this.SVGSprite.svgElement.ownerSVGElement.createSVGPoint();
+	    //cp.x = this.SVGSprite.width/2;//this.SVGSprite.x;
+	    //cp.y = this.SVGSprite.height/2;//this.SVGSprite.y;
+	    //cp = cp.matrixTransform(this.SVGSprite._svgTransformUtil.transformWrapper.getCTM().inverse());
+	    
+	    /*this.point.setAttribute("cx", p.x);
+            this.point.setAttribute("cy", p.y);
+	    this.center.setAttribute("cx", cp.x);
+            this.center.setAttribute("cy", cp.y);
+	    */
+	    
+	    var ratio = (p.x-(this.origMouseX/2))/(this.origMouseX/2); //中心点を基準とした初期座標とマウス座標の差分
+	    var scale = this.origScaleX*ratio;
+	    	    
+	    this.SVGSprite.scaleX = scale;
+	    this.SVGSprite.scaleY = (this.origFlipped)? -scale : scale;
+	    
             this._setBoxes();
                         
         }
