@@ -32,12 +32,21 @@
      *初期化
      */
     SVGDropBox.prototype.init = function(){
-        
+	
         //ドロップ領域用の要素を作成
         this.element = document.createElement("div");
-        this.className = "SVGDropBox";
-        this.element.className = this.className;
+
+	//FileReaderが定義されていない場合は初期化せず
+	if(typeof FileReader === 'undefined') {
+	    
+	    return;
+	    
+	}
         
+	//クラス名の付与
+	this.className = "SVGDropBox";
+        this.element.className = this.className;
+	
         //Dropサポートの有無        
         if(this.isDropSupported()) { //Dropが有効の場合
             
@@ -171,7 +180,7 @@
 	    var reader = new FileReader();
 	    
 	    var self = this;
-	    reader.addEventListener("load", function(e){ self.onFileLoaded(e);},false);
+	    reader.onload = function(e){ self.onFileLoaded(e);};
 	    
 	    if(this.fileType=="svg") {
 		
