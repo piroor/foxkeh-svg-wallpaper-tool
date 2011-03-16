@@ -416,6 +416,10 @@
 
 		});
  
+	} else {
+	    
+		$(this).trigger('parts_fulled');
+	    
 	}
  };
  
@@ -526,9 +530,12 @@
 		 var viewBox = self.getViewBox();
 		 parts.x = viewBox.width/2;
 		 parts.y = viewBox.height/2;
+		 
+		 self._removeLoadingObjects(index); 
+		 
 		 self.addParts(parts);
 		   
-		 self._removeLoadingObjects(index); 
+		 
 	   
 	   });
 	    
@@ -1192,6 +1199,7 @@
        var self = this;
        $(this.wallpaper).bind("load_start",function(){ self.onLoadingStarted(); });
        $(this.wallpaper).bind("load_all_complete", function(){ self.onLoadingAllCompleted(); });
+       $(this.wallpaper).bind("parts_fulled", function(){ self.onPartsFulled() });
 
  };
  
@@ -1207,6 +1215,13 @@
        
        this.element.html('');
        
+ };
+ 
+ //パーツが追加できる上限いっぱいになった場合の処理
+ FoxkehCreator.IndicatorView.prototype.onPartsFulled = function() {
+    
+    this.element.html('Can not add any more parts!');
+        
  };
  
  //グローバルオブジェクト化

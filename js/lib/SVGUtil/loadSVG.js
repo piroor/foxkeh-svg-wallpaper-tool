@@ -25,7 +25,7 @@
 			if(xhr.readyState == 4) {
  
 				if(xhr.status == 200 && xhr.responseXML) {
-				 
+
 					var svg = xhr.responseXML.getElementsByTagName("svg")[0];
 					svg = document.importNode(svg, true);
 					
