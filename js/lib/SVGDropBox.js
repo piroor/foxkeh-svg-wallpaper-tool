@@ -1,13 +1,8 @@
 /*!
- * Copyright 2010-2011, Mozilla Japan.
+ * Copyright 2011, Mozilla Japan.
  * Dual licensed under the MIT or GPL Version 3 licenses.
- * https://bitbucket.org/foxkeh/wallpaper/src/tip/MIT-LICENSE.txt
- * https://bitbucket.org/foxkeh/wallpaper/src/tip/GPL-LICENSE.txt
- *
- * Includes Modernizr v1.6
- * http://www.modernizr.com
- * Copyright (c) 2009-2010
- * Dual-licensed under the BSD or MIT licenses.
+ * https://bitbucket.org/foxkeh/svg-wallpaper-tool/src/tip/MIT-LICENSE.txt
+ * https://bitbucket.org/foxkeh/svg-wallpaper-tool/src/tip/GPL-LICENSE.txt
  */
 (function(global){
  

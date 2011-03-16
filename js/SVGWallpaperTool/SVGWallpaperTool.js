@@ -1,8 +1,8 @@
 /*!
- * Copyright 2010-2011, Mozilla Japan.
+ * Copyright 2011, Mozilla Japan.
  * Dual licensed under the MIT or GPL Version 3 licenses.
- * https://bitbucket.org/foxkeh/wallpaper/src/tip/MIT-LICENSE.txt
- * https://bitbucket.org/foxkeh/wallpaper/src/tip/GPL-LICENSE.txt
+ * https://bitbucket.org/foxkeh/svg-wallpaper-tool/src/tip/MIT-LICENSE.txt
+ * https://bitbucket.org/foxkeh/svg-wallpaper-tool/src/tip/GPL-LICENSE.txt
  */
 (function(global){
  /**
@@ -31,12 +31,12 @@
 
  }; 
 
- var FoxkehCreator = {};
+ var SVGWallpaperTool = {};
 
  /**
   * 初期化
   */
- FoxkehCreator.FoxkehCreator = function(param) {
+ SVGWallpaperTool.SVGWallpaperTool = function(param) {
        
        /**
        param = {
@@ -86,7 +86,7 @@
  
 	//壁紙
        if(param.wallpaperSVG) {
-	      this.wallpaper = new FoxkehCreator.Wallpaper($("#"+param.wallpaperSVG)[0]);
+	      this.wallpaper = new SVGWallpaperTool.Wallpaper($("#"+param.wallpaperSVG)[0]);
        } else {
 	      return;
        }
@@ -99,29 +99,29 @@
  	//壁紙サイズ設定
 	if(param.sizeSelector) {
 	      var select = $("#"+param.sizeSelector);
-	      this.sizeSelectorView = new FoxkehCreator.WallpaperSizeSelectorView(select);
-	      this.sizeSelectorController = new FoxkehCreator.WallpaperSizeSelectorController(this.sizeSelectorView, this.wallpaper);
+	      this.sizeSelectorView = new SVGWallpaperTool.WallpaperSizeSelectorView(select);
+	      this.sizeSelectorController = new SVGWallpaperTool.WallpaperSizeSelectorController(this.sizeSelectorView, this.wallpaper);
 	}
  
 	//背景画像リストコントローラー
 	if(param.backgroundList) {
 		var list = $("#"+param.backgroundList);
-		this.backgroundListController = new FoxkehCreator.BackgroundListController(this.wallpaper, list);
+		this.backgroundListController = new SVGWallpaperTool.BackgroundListController(this.wallpaper, list);
 	}
  
 	//パーツリスト
 	if(param.partsList) {
 		
 		var partsList = $("#"+param.partsList);
-		this.partsListView = new FoxkehCreator.PartsListView(partsList);
-		this.partsListController = new FoxkehCreator.PartsListController(this.wallpaper, this.partsListView);
+		this.partsListView = new SVGWallpaperTool.PartsListView(partsList);
+		this.partsListController = new SVGWallpaperTool.PartsListController(this.wallpaper, this.partsListView);
   
 	}
  
 	//ダウンロードボタン
 	if(param.downLoadButton) {
 		var button = $("#"+param.downLoadButton);
-		this.downloadButtonController = new FoxkehCreator.DownloadButtonController(this.wallpaper, button);
+		this.downloadButtonController = new SVGWallpaperTool.DownloadButtonController(this.wallpaper, button);
 	}
  
        //パーツコントローラー
@@ -132,14 +132,14 @@
                      alpha: param.alphaOptions,
                      rotation: param.rotationOptions
               };
-              this.partsControllView = new FoxkehCreator.PartsControllView(this.wallpaper, partsControll, options);
-              this.partsControllController = new FoxkehCreator.PartsControllController(this.wallpaper, this.partsControllView);
+              this.partsControllView = new SVGWallpaperTool.PartsControllView(this.wallpaper, partsControll, options);
+              this.partsControllController = new SVGWallpaperTool.PartsControllController(this.wallpaper, this.partsControllView);
        }
        
        //インジケーター
        if(param.indicator) {
               var indicator = $("#"+param.indicator);
-              this.indicatorView = new FoxkehCreator.IndicatorView(this.wallpaper, indicator);
+              this.indicatorView = new SVGWallpaperTool.IndicatorView(this.wallpaper, indicator);
        }
        
        
@@ -169,7 +169,7 @@
  /**
   * 壁紙
   */
- FoxkehCreator.Wallpaper = function(svg, partsLimit) {
+ SVGWallpaperTool.Wallpaper = function(svg, partsLimit) {
 	
 	this.svg = svg;
 	this._origWidth = svg.width.baseVal.value;
@@ -184,17 +184,17 @@
  };
  
  //壁紙を初期化
- FoxkehCreator.Wallpaper.prototype.init = function() {
+ SVGWallpaperTool.Wallpaper.prototype.init = function() {
  
 	//レイヤーを作成
 	var backgroundLayer = document.createElementNS("http://www.w3.org/2000/svg", "g");
-	backgroundLayer.setAttribute("class", "foxkehWallpaperBackground");
+	backgroundLayer.setAttribute("class", "wallpaperBackground");
 	
 	var partsLayer = document.createElementNS("http://www.w3.org/2000/svg", "g");
-	partsLayer.setAttribute("class", "foxkehWallpaperParts");
+	partsLayer.setAttribute("class", "wallpaperParts");
 	
         var copyrightLayer = document.createElementNS("http://www.w3.org/2000/svg", "g");
-	copyrightLayer.setAttribute("class", "foxkehWallpaperCopyright");
+	copyrightLayer.setAttribute("class", "wallpaperCopyright");
         
 	this._backgroundLayer = backgroundLayer;
 	this._partsLayer = partsLayer;
@@ -218,7 +218,7 @@
  };
  
  //ロード中オブジェクトを追加
- FoxkehCreator.Wallpaper.prototype._addLoadingObjects = function(url) {
+ SVGWallpaperTool.Wallpaper.prototype._addLoadingObjects = function(url) {
        
        this._loadingObjects.push(url);
    
@@ -231,7 +231,7 @@
  };
  
  //ロード中オブジェクトを削除
- FoxkehCreator.Wallpaper.prototype._removeLoadingObjects = function(index) {
+ SVGWallpaperTool.Wallpaper.prototype._removeLoadingObjects = function(index) {
        
        //this._loadingObjects.splice(index,1);
        this._loadingObjects[index] = "";
@@ -249,12 +249,12 @@
  };
  
  //リフレッシュ
- FoxkehCreator.Wallpaper.prototype._refresh = function() {
+ SVGWallpaperTool.Wallpaper.prototype._refresh = function() {
 	$(this.svg).hide().show();
  };
  
  //viewBoxを設定
- FoxkehCreator.Wallpaper.prototype.setViewBox = function(width, height) {
+ SVGWallpaperTool.Wallpaper.prototype.setViewBox = function(width, height) {
 	
 	var _width = this._origWidth;
 	var _height = Math.floor(_width * (height/width));
@@ -270,14 +270,14 @@
  };
  
  //viewBoxを取得
- FoxkehCreator.Wallpaper.prototype.getViewBox = function() {
+ SVGWallpaperTool.Wallpaper.prototype.getViewBox = function() {
  
 	return this.svg.viewBox.baseVal;
  
  };
  
  //copyrightを設定
- FoxkehCreator.Wallpaper.prototype.setCopyright = function(svgElement) {
+ SVGWallpaperTool.Wallpaper.prototype.setCopyright = function(svgElement) {
 
 	//既存の画像をリムーブ
 	if(this._copyright) {
@@ -294,7 +294,7 @@
  };
  
  //コピーライトのサイズ調整
- FoxkehCreator.Wallpaper.prototype._adjustmentCopyrightSize = function() {
+ SVGWallpaperTool.Wallpaper.prototype._adjustmentCopyrightSize = function() {
 	
 	 if(this._copyright) {
  
@@ -312,7 +312,7 @@
  };
  
  //コピーライトをロード
- FoxkehCreator.Wallpaper.prototype.loadCopyright = function(url) {
+ SVGWallpaperTool.Wallpaper.prototype.loadCopyright = function(url) {
 	
 	var self = this;
         
@@ -328,7 +328,7 @@
  };
  
  //背景を設定
- FoxkehCreator.Wallpaper.prototype.setBackground = function(svgElement) {
+ SVGWallpaperTool.Wallpaper.prototype.setBackground = function(svgElement) {
 	 
 	//既存の背景をリムーブ
 	if(this._background) {
@@ -346,7 +346,7 @@
  };
  
  //背景画像のサイズ調整
- FoxkehCreator.Wallpaper.prototype._adjustmentBackgroundSize = function() {
+ SVGWallpaperTool.Wallpaper.prototype._adjustmentBackgroundSize = function() {
 	
 	 if(this._background) {
  
@@ -382,7 +382,7 @@
  };
 
  //背景をロード
- FoxkehCreator.Wallpaper.prototype.loadBackground = function(url) {
+ SVGWallpaperTool.Wallpaper.prototype.loadBackground = function(url) {
 	
        var self = this;
  
@@ -398,7 +398,7 @@
  };
  
  //パーツを追加
- FoxkehCreator.Wallpaper.prototype.addParts = function(parts) {
+ SVGWallpaperTool.Wallpaper.prototype.addParts = function(parts) {
 	
 	if(this.parts.length < this.partsLimit) {
  
@@ -424,7 +424,7 @@
  };
  
  //パーツを削除
- FoxkehCreator.Wallpaper.prototype.removeParts = function(parts) {
+ SVGWallpaperTool.Wallpaper.prototype.removeParts = function(parts) {
        
        var newPartsList = [];
        
@@ -457,7 +457,7 @@
  };
  
  //パーツをアクティブに
- FoxkehCreator.Wallpaper.prototype._activatedPartsHandler = function(e) {
+ SVGWallpaperTool.Wallpaper.prototype._activatedPartsHandler = function(e) {
 	
 	var parts = e.currentTarget;
 	this.activeParts = parts;
@@ -480,7 +480,7 @@
  };
  
  //全パーツを非アクティブに
- FoxkehCreator.Wallpaper.prototype.deactivateParts = function(e) {
+ SVGWallpaperTool.Wallpaper.prototype.deactivateParts = function(e) {
    
        	for(var i=0,l=this.parts.length; i<l; i++) {
 					
@@ -494,7 +494,7 @@
  };
  
  //パーツをロード
- FoxkehCreator.Wallpaper.prototype.loadParts = function(param) {
+ SVGWallpaperTool.Wallpaper.prototype.loadParts = function(param) {
 		
 	/*{
 		 file: "parts/svg/foxkeh/foxkeh/foxkeh_2010_10.svg",
@@ -510,7 +510,7 @@
 	 
 	 if(typeof param.svgElement != "undefined" && param.svgElement instanceof SVGElement) {
 	    
-	    var parts = new FoxkehCreator.Parts(param.svgElement);
+	    var parts = new SVGWallpaperTool.Parts(param.svgElement);
 	    var viewBox = self.getViewBox();
 	    
 	    var viewBox = this.getViewBox();
@@ -525,7 +525,7 @@
 	    
 	    SVGUtil.loadSVG(param.file, function(svg){
 		   
-		 var parts = new FoxkehCreator.Parts(svg);
+		 var parts = new SVGWallpaperTool.Parts(svg);
 		   
 		 var viewBox = self.getViewBox();
 		 parts.x = viewBox.width/2;
@@ -545,7 +545,7 @@
  };
 
  //パーツの階層を１つ上げる
- FoxkehCreator.Wallpaper.prototype.upPartsIndex = function(parts) {
+ SVGWallpaperTool.Wallpaper.prototype.upPartsIndex = function(parts) {
        
        var currentIndex = parts.index;
        var targetIndex = currentIndex+1;
@@ -580,7 +580,7 @@
  };
  
  //パーツの階層を１つ下げる
- FoxkehCreator.Wallpaper.prototype.downPartsIndex = function(parts) {
+ SVGWallpaperTool.Wallpaper.prototype.downPartsIndex = function(parts) {
        
        var currentIndex = parts.index;
        var targetIndex = currentIndex-1;
@@ -617,7 +617,7 @@
  
 
  //SVGを出力
- FoxkehCreator.Wallpaper.prototype.toDataURL = function() {
+ SVGWallpaperTool.Wallpaper.prototype.toDataURL = function() {
 	
 	//クローン
 	var tmpSVG = this.svg.cloneNode(true);
@@ -642,7 +642,7 @@
  /**
   * パーツ
   */
- FoxkehCreator.Parts = function(svgElement) {
+ SVGWallpaperTool.Parts = function(svgElement) {
 	
        this.constructor(svgElement);
        this.index = null;
@@ -660,9 +660,9 @@
  
  };
  
- FoxkehCreator.Parts.prototype = new SVGSprite.Sprite;
+ SVGWallpaperTool.Parts.prototype = new SVGSprite.Sprite;
  
- FoxkehCreator.Parts.prototype.setSvgElement = function(svgElement) {
+ SVGWallpaperTool.Parts.prototype.setSvgElement = function(svgElement) {
 
        this._svgElement = svgElement;
      
@@ -674,7 +674,7 @@
  * @param {SVGElement} content 追加先の要素
  *
  */
- FoxkehCreator.Parts.prototype.appendTo = function(content) {
+ SVGWallpaperTool.Parts.prototype.appendTo = function(content) {
 
 	content.appendChild(this.svgElement);
 	
@@ -686,7 +686,7 @@
 
  
  //scale
- defineSetterGetter(FoxkehCreator.Parts.prototype, "scale",
+ defineSetterGetter(SVGWallpaperTool.Parts.prototype, "scale",
        
        //setter
        function(scale) {
@@ -707,7 +707,7 @@
  );
  
  //active
- FoxkehCreator.Parts.prototype.activate = function() {
+ SVGWallpaperTool.Parts.prototype.activate = function() {
 	 
        if(!this.active) {
 	
@@ -729,7 +729,7 @@
  };
  
  //deactive
- FoxkehCreator.Parts.prototype.deactive = function() {
+ SVGWallpaperTool.Parts.prototype.deactive = function() {
 	
        if(this.active) {
               
@@ -745,7 +745,7 @@
  
  
  //ドラッグを開始する
- FoxkehCreator.Parts.prototype.setStartDrag = function() {
+ SVGWallpaperTool.Parts.prototype.setStartDrag = function() {
 	
 	var self = this;
  
@@ -761,7 +761,7 @@
  /**
   * キャンバスサイズセレクターView
   */
- FoxkehCreator.WallpaperSizeSelectorView = function(selectElement) {
+ SVGWallpaperTool.WallpaperSizeSelectorView = function(selectElement) {
 	
 	this.selectElement = $(selectElement);
 	 
@@ -773,14 +773,14 @@
  
  };
  
- FoxkehCreator.WallpaperSizeSelectorView.prototype.getWidth = function() {
+ SVGWallpaperTool.WallpaperSizeSelectorView.prototype.getWidth = function() {
  
 	var value = this.selectElement.val().split("x");
 	return value[0];
  
  };
 
- FoxkehCreator.WallpaperSizeSelectorView.prototype.getHeight = function() {
+ SVGWallpaperTool.WallpaperSizeSelectorView.prototype.getHeight = function() {
  
 	var value = this.selectElement.val().split("x");
 	return value[1];
@@ -790,7 +790,7 @@
  /**
   * キャンバスサイズセレクターController
   */
- FoxkehCreator.WallpaperSizeSelectorController = function(sizeSelectorView, wallpaper) {
+ SVGWallpaperTool.WallpaperSizeSelectorController = function(sizeSelectorView, wallpaper) {
  
 	this.sizeSelectorView = sizeSelectorView;
 	this.wallpaper = wallpaper;
@@ -803,7 +803,7 @@
  
  };
  
- FoxkehCreator.WallpaperSizeSelectorController.prototype.changeHandler = function(e) {
+ SVGWallpaperTool.WallpaperSizeSelectorController.prototype.changeHandler = function(e) {
 
 	var width = this.sizeSelectorView.getWidth();
 	var height = this.sizeSelectorView.getHeight();
@@ -815,7 +815,7 @@
  /**
   * パーツコントロールView
   */
- FoxkehCreator.PartsControllView = function(wallpaper, parentElement, options) {
+ SVGWallpaperTool.PartsControllView = function(wallpaper, parentElement, options) {
        
        this.wallpaper = wallpaper;
        this.parentElement = $(parentElement);
@@ -830,7 +830,7 @@
  };
  
  //初期化
- FoxkehCreator.PartsControllView.prototype.init = function(options) {
+ SVGWallpaperTool.PartsControllView.prototype.init = function(options) {
        
        //要素作成
        var html = '<dl>';
@@ -901,7 +901,7 @@
  };
  
  //スライダー作成
- FoxkehCreator.PartsControllView.prototype._createSlider = function(className,option) {
+ SVGWallpaperTool.PartsControllView.prototype._createSlider = function(className,option) {
        
        var min = (typeof option.min == "number")? option.min : 0;
        var max = (typeof option.max == "number")? option.max : 100;
@@ -920,7 +920,7 @@
  };
 
  //有効
- FoxkehCreator.PartsControllView.prototype.enable = function() {
+ SVGWallpaperTool.PartsControllView.prototype.enable = function() {
        
        if(this.wallpaper.activeParts != null) {
               
@@ -941,7 +941,7 @@
  };
  
  //無効
- FoxkehCreator.PartsControllView.prototype.disable = function() {
+ SVGWallpaperTool.PartsControllView.prototype.disable = function() {
        
        //this.scaleControll.slider("disable");
        this.alphaControll.slider("disable");
@@ -959,7 +959,7 @@
  /**
   * パーツコントロールController
   */
- FoxkehCreator.PartsControllController = function(wallpaper, partsControllView) {
+ SVGWallpaperTool.PartsControllController = function(wallpaper, partsControllView) {
        
        this.wallpaper = wallpaper;
        this.partsControllView = partsControllView;
@@ -969,7 +969,7 @@
        
  };
  
- FoxkehCreator.PartsControllController.prototype.init = function() {
+ SVGWallpaperTool.PartsControllController.prototype.init = function() {
        
        var partsControllView = this.partsControllView;
        var self = this;
@@ -1025,7 +1025,7 @@
  /**
   * パーツリストView
   */
- FoxkehCreator.PartsListView = function(partsList) {
+ SVGWallpaperTool.PartsListView = function(partsList) {
 	
 	this.partsListElement = $(partsList);
 	this.list = this.partsListElement.find("> li a");
@@ -1038,13 +1038,13 @@
  
  };
  
- FoxkehCreator.PartsListView.prototype.init = function() {
+ SVGWallpaperTool.PartsListView.prototype.init = function() {
 
     this.appendSVGDropBox();
 
  };
  
- FoxkehCreator.PartsListView.prototype.appendSVGDropBox = function() {
+ SVGWallpaperTool.PartsListView.prototype.appendSVGDropBox = function() {
 
     var svgDropBox = new SVGDropBox({width:70, height:70});
     var list = document.createElement("li");
@@ -1067,7 +1067,7 @@
     
  };
  
- FoxkehCreator.PartsListView.prototype.select = function(selectedList,isSVGDropBox) {
+ SVGWallpaperTool.PartsListView.prototype.select = function(selectedList,isSVGDropBox) {
 	
 	this.selectedListIsSVGDropBox = (typeof isSVGDropBox == "boolean")? isSVGDropBox : false;
 	this.selected = selectedList;
@@ -1078,7 +1078,7 @@
  /**
   * パーツリストController
   */
- FoxkehCreator.PartsListController = function(wallpaper,partsListView) {
+ SVGWallpaperTool.PartsListController = function(wallpaper,partsListView) {
 	
         this.wallpaper = wallpaper;
 	this.partsListView = partsListView;
@@ -1089,7 +1089,7 @@
 
  };
  
- FoxkehCreator.PartsListController.prototype.selectedHandler = function() {
+ SVGWallpaperTool.PartsListController.prototype.selectedHandler = function() {
 	
 	if(this.partsListView.selectedListIsSVGDropBox) {
 	    
@@ -1150,7 +1150,7 @@
  /**
   * 背景リストコントローラー
   */
- FoxkehCreator.BackgroundListController = function(wallpaper, element) {
+ SVGWallpaperTool.BackgroundListController = function(wallpaper, element) {
 	
 	this.wallpaper = wallpaper;
 	this.list = $(element).find("> li a");
@@ -1163,7 +1163,7 @@
  };
  
  //選択時の動作
- FoxkehCreator.BackgroundListController.prototype.select = function(element) {
+ SVGWallpaperTool.BackgroundListController.prototype.select = function(element) {
  
 	var url = $(element).attr("href");
  
@@ -1176,7 +1176,7 @@
  /**
   * ダウンロードボタンController
   */
- FoxkehCreator.DownloadButtonController = function(wallpaper, buttunElement) {
+ SVGWallpaperTool.DownloadButtonController = function(wallpaper, buttunElement) {
 	
 	this.wallpaper = wallpaper;
 	this.buttonElement = $(buttunElement);
@@ -1190,7 +1190,7 @@
  /**
   * インジケーターView
   */
- FoxkehCreator.IndicatorView = function(wallpaper, indicatorElement) {
+ SVGWallpaperTool.IndicatorView = function(wallpaper, indicatorElement) {
        
        this.wallpaper = wallpaper;
        this.element = $(indicatorElement);
@@ -1204,27 +1204,27 @@
  };
  
  //ローディング開始
- FoxkehCreator.IndicatorView.prototype.onLoadingStarted = function() {
+ SVGWallpaperTool.IndicatorView.prototype.onLoadingStarted = function() {
        
        this.element.html('<img src="./images/loading.gif" /> Loading...');
        
  };
  
  //ローディング完全完了
- FoxkehCreator.IndicatorView.prototype.onLoadingAllCompleted = function() {
+ SVGWallpaperTool.IndicatorView.prototype.onLoadingAllCompleted = function() {
        
        this.element.html('');
        
  };
  
  //パーツが追加できる上限いっぱいになった場合の処理
- FoxkehCreator.IndicatorView.prototype.onPartsFulled = function() {
+ SVGWallpaperTool.IndicatorView.prototype.onPartsFulled = function() {
     
     this.element.html('Can not add any more parts!');
         
  };
  
  //グローバルオブジェクト化
- global.FoxkehCreator = FoxkehCreator;
+ global.SVGWallpaperTool = SVGWallpaperTool;
  
 })(this);
