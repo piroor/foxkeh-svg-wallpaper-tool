@@ -38,50 +38,12 @@
   */
  SVGWallpaperTool.SVGWallpaperTool = function(param) {
        
-       /**
-       param = {
-       
-              //初期バックグランド
-              background: "parts/svg/bg/bg_2010_10.svg", 
-              
-              //初期パーツリスト
-              parts: [{
-                      file: "parts/svg/foxkeh/foxkeh_2010_10.svg",
-                      right: 100,
-                      bottom: 100,
-                      alpha: 1,
-                      scaleX: 1,
-                      scaleY: 1,
-                      rotation: 0
-                   }],
-       
-              //壁紙表示用SVG要素ID名
-              wallpaperSVG: "wallpaper",
-              
-              //壁紙サイズ選択要素ID名
-              sizeSelector: "sizeSelect",
-              
-              //背景一覧ID名
-              backgroundList: "backgroundList",
-       
-              //パーツ一覧ID名
-              partsList : "partsList",
-              
-              //ダウンロードボタンID名
-              downLoadButton: "downloadButton",
-              
-              //パーツコントローラーID名
-              partsControll: "partsControll"
-       
-       };
-       */
-       
        if(!param) {
 	      return;
        }
  
        /**
-        * 基本オブジェクト [Model]
+        * 基本オブジェクト
         */
  
 	//壁紙
@@ -93,7 +55,7 @@
        
  
        /**
-        * UI [View, Controller]
+        * UI
         */
  
  	//壁紙サイズ設定
@@ -1116,24 +1078,6 @@
 		    var svgDoc = parser.parseFromString(svgString, "text/xml");
 		    
 		    var svgElement = document.importNode(svgDoc.getElementsByTagName("svg")[0], true);
-		    
-		    /*
-		    svgElement = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-		    svgElement.setAttribute("xmlns","http://www.w3.org/2000/svg");
-		    svgElement.setAttribute("xmlns:link","http://www.w3.org/1999/xlink");
-		    
-		    var rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
-		    rect.setAttribute("width", 50);
-		    rect.setAttribute("height", 50);
-		    
-		    var image = document.createElementNS("http://www.w3.org/2000/svg", "image");
-		    image.setAttribute("xlink:href", svgDropBox.content);
-		    image.setAttribute("width", 300);
-		    image.setAttribute("height", 300);
-		    
-		    svgElement.appendChild(rect);
-		    svgElement.appendChild(image);
-		    */
 		    
 		}
 		
