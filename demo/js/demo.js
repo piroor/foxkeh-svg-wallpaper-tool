@@ -27,14 +27,7 @@
                               partsLimit: 5,
                               
                               //初期パーツリスト
-                              parts: [{
-                                      file: "parts/svg/foxkeh/foxkeh_2010_10.svg",
-                                      right: 100,
-                                      bottom: 100,
-                                      alpha: 1,
-                                      scale: 1,
-                                      rotation: 0
-                                   }],
+                              parts: ["parts/svg/foxkeh/foxkeh_2010_10.svg"],
                               
                               //透明度の設定値
                               alphaOptions: {min: 0.1, max: 1, step: 0.05},

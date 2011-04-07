@@ -5,6 +5,807 @@
  * https://bitbucket.org/foxkeh/svg-wallpaper-tool/src/tip/GPL-LICENSE.txt
  */
 (function(global){
+	
+	function loadSVG(url,callback) {
+		 
+		var xhr = new XMLHttpRequest();
+		xhr.open('GET', url, true);
+ 
+		xhr.onreadystatechange = function() {
+			
+			if(xhr.readyState == 4) {
+ 
+				if(xhr.status == 200 && xhr.responseXML) {
+
+					var svg = xhr.responseXML.getElementsByTagName("svg")[0];
+					svg = document.importNode(svg, true);
+					
+					callback(svg);
+					this.svg = svg;
+
+				}
+ 
+			}
+ 
+		};
+
+
+		xhr.send(null);
+ 
+ 
+	};
+	
+	//グローバルオブジェクトに
+	if(typeof SVGUtil == "undefined") {
+		global.SVGUtil = {};
+	}
+	
+	global.SVGUtil.loadSVG = loadSVG;
+	
+})(this);
+/*
+ * $Id: base64.js,v 1.1 2009/03/01 22:38:45 dankogai Exp dankogai $
+ *
+ * History:
+ *   dankogai's original: character-based
+ *   drry's fix: split string to array then join
+ *   new version: regexp-based
+ */
+
+(function(){
+ 
+ var b64chars 
+ = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
+ var b64tab = function(bin){
+ var t = {};
+ for (var i = 0, l = bin.length; i < l; i++) t[bin.charAt(i)] = i;
+ return t;
+ }(b64chars);
+ 
+ var sub_toBase64 = function(m){
+ var n = (m.charCodeAt(0) << 16)
+ | (m.charCodeAt(1) <<  8)
+ | (m.charCodeAt(2)      );
+ return b64chars.charAt( n >>> 18)
+ + b64chars.charAt((n >>> 12) & 63)
+ + b64chars.charAt((n >>>  6) & 63)
+ + b64chars.charAt( n         & 63);
+ };
+ 
+ var toBase64 = function(bin){
+ if (bin.match(/[^\x00-\xFF]/)) throw 'unsupported character found' ;
+ var padlen = 0;
+ while(bin.length % 3) {
+ bin += '\0';
+ padlen++;
+ };
+ var b64 = bin.replace(/[\x00-\xFF]{3}/g, sub_toBase64);
+ if (!padlen) return b64;
+ b64 = b64.substr(0, b64.length - padlen);
+ while(padlen--) b64 += '=';
+ return b64;
+ };
+ 
+ var btoa = window.btoa || toBase64;
+ 
+ var sub_fromBase64 = function(m){
+ var n = (b64tab[ m.charAt(0) ] << 18)
+ |   (b64tab[ m.charAt(1) ] << 12)
+ |   (b64tab[ m.charAt(2) ] <<  6)
+ |   (b64tab[ m.charAt(3) ]);
+ return String.fromCharCode(  n >> 16 )
+ +  String.fromCharCode( (n >>  8) & 0xff )
+ +  String.fromCharCode(  n        & 0xff );
+ };
+ 
+ var fromBase64 = function(b64){
+ b64 = b64.replace(/[^A-Za-z0-9\+\/]/g, '');
+ var padlen = 0;
+ while(b64.length % 4){
+ b64 += 'A';
+ padlen++;
+ }
+ var bin = b64.replace(/[A-Za-z0-9\+\/]{4}/g, sub_fromBase64);
+ bin.length -= [0,0,2,1][padlen];
+ return bin;
+ };
+ 
+ var atob = window.atob || fromBase64;
+ 
+ var re_char_nonascii = /[^\x00-\xFF]/g;
+ 
+ var sub_char_nonascii = function(m){
+ var n = m.charCodeAt(0);
+ return n < 0x800 ? String.fromCharCode(0xc0 | (n >>>  6))
+ + String.fromCharCode(0x80 | (n & 0x3f))
+ :              String.fromCharCode(0xe0 | ((n >>> 12) & 0x0f))
+ + String.fromCharCode(0x80 | ((n >>>  6) & 0x3f))
+ + String.fromCharCode(0x80 |  (n         & 0x3f))
+ ;
+ };
+ 
+ var utob = function(uni){
+ return uni.replace(re_char_nonascii, sub_char_nonascii);
+ };
+ 
+ var re_bytes_nonascii
+ = /[\xC0-\xDF][\x80-\xBF]|[\xE0-\xEF][\x80-\xBF]{2}|[\xF0-\xF7][\x80-\xBF]{3}/g;
+ 
+ var sub_bytes_nonascii = function(m){
+ var c0 = m.charCodeAt(0);
+ var c1 = m.charCodeAt(1);
+ if(c0 < 0xe0){
+ return String.fromCharCode(((c0 & 0x1f) << 6) | (c1 & 0x3f));
+ }else{
+ var c2 = m.charCodeAt(2);
+ return String.fromCharCode(
+							((c0 & 0x0f) << 12) | ((c1 & 0x3f) <<  6) | (c2 & 0x3f)
+							);
+ }
+ };
+ 
+ var btou = function(bin){
+ return bin.replace(re_bytes_nonascii, sub_bytes_nonascii);
+ };
+ 
+ if (!this['Base64']) Base64 = {
+ fromBase64:fromBase64,
+ toBase64:toBase64,
+ atob:atob,
+ btoa:btoa,
+ utob:utob,
+ btou:btou,
+ encode:function(u){ return btoa(utob(u)) },
+ encodeURI:function(u){
+ return btoa(utob(u)).replace(/[+\/]/g, function(m0){
+							  return m0 == '+' ? '-' : '_';
+							  }).replace(/=+$/, '');
+ },
+ decode:function(a){ 
+ return btou(atob(a.replace(/[-_]/g, function(m0){
+							return m0 == '-' ? '+' : '/';
+							})));
+ }
+ };
+ 
+ })();/*!
+ * Copyright 2011, Mozilla Japan.
+ * Dual licensed under the MIT or GPL Version 3 licenses.
+ * https://bitbucket.org/foxkeh/svg-wallpaper-tool/src/tip/MIT-LICENSE.txt
+ * https://bitbucket.org/foxkeh/svg-wallpaper-tool/src/tip/GPL-LICENSE.txt
+ */
+(function(global){
+    
+    var SVGBBoxTool = function(SVGSprite,options) {
+         
+        options = (typeof options == "undefined")? {} : options;
+        
+        //SVGSprite
+        this.SVGSprite = SVGSprite;
+        
+	this.isSafari = (navigator.userAgent.indexOf("Safari") != -1 && navigator.userAgent.indexOf("Chrome") == -1);
+	
+        //オプション
+        this.options = {
+            scale: (typeof options.scale == "boolean")? options.scale : true,
+            rotation: (typeof options.rotation == "boolean")? options.rotation : true
+        }
+        
+        
+        this.center = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+        this.point = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+        this.SVGSprite.svgElement.ownerSVGElement.appendChild(this.center);
+        this.SVGSprite.svgElement.ownerSVGElement.appendChild(this.point);
+        
+        
+        //初期化
+        this.init();
+    
+    };
+    
+    /**
+     * 初期化する
+     */
+    SVGBBoxTool.prototype.init = function(){
+
+        this.origMouseX = this.origMouseY = this._rotateInitRotate = null;      
+        this.origWidth = this.SVGSprite.width;
+        this.origHeight = this.SVGSprite.height;
+        
+        //枠を作る
+        var _bbox = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+        _bbox.setAttribute("width", this.origWidth);
+        _bbox.setAttribute("height", this.origHeight);
+        this._bbox = _bbox;
+        
+        //拡大縮小ボックス
+        var _scaleBox = document.createElementNS("http://www.w3.org/2000/svg", "g");
+	/*var _scaleBoxSVG = document.createElementNS("http://www.w3.org/2000/svg", "use");
+        _scaleBoxSVG.setAttributeNS("http://www.w3.org/1999/xlink","xlink:href","svg/scale.svg#scale");
+        _scaleBoxSVG.setAttribute("transform", "scale("+1/this.SVGSprite._viewPortScaleX+")");
+	_scaleBox.appendChild(_scaleBoxSVG);
+	*/
+	var _scaleSVGSrc = '<svg xmlns="http://www.w3.org/2000/svg">';
+	_scaleSVGSrc += '<g id="scale">';
+	_scaleSVGSrc += '<rect width="20" height="20" x="0" y="0" style="color:#000000;fill:#ffffff;stroke:#000000;stroke-width:0.5" />';
+	_scaleSVGSrc += '<g transform="translate(0, -6)">';
+	_scaleSVGSrc += '<path d="M 4.730198,11.40495 15.722277,22.397029" style="fill:none;stroke:#000000;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />';
+	_scaleSVGSrc += '<path d="m 8.4005759,8.3507412 -4.1659224,-10e-8 -4.16592245,0 L 2.1516922,4.7429466 4.2346535,1.1351519 6.3176146,4.7429464 z" ';
+	_scaleSVGSrc += 'transform="matrix(0.51977901,-0.51977901,0.51977901,0.51977901,-0.95968357,9.9839171)" ';
+	_scaleSVGSrc += 'style="color:#000000;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.505;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />';
+	_scaleSVGSrc += '<path d="m 8.4005759,8.3507412 -4.1659224,-10e-8 -4.16592245,0 L 2.1516922,4.7429466 4.2346535,1.1351519 6.3176146,4.7429464 z" ';
+	_scaleSVGSrc += 'transform="matrix(-0.51977901,0.51977901,-0.51977901,-0.51977901,20.372362,22.713437)" ';
+	_scaleSVGSrc += 'style="color:#000000;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.505;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />';
+	_scaleSVGSrc += '</g>';
+	_scaleSVGSrc += '</g>';
+	_scaleSVGSrc += '</svg>';
+	var parser = new DOMParser()
+	var _scaleSVGXML = parser.parseFromString(_scaleSVGSrc, "text/xml");
+	var _scaleSVG = document.adoptNode(_scaleSVGXML.getElementById("scale"));
+	_scaleSVG.setAttribute("transform", "scale("+1/this.SVGSprite._viewPortScaleX+")");
+	_scaleBox.appendChild(_scaleSVG);
+        this._scaleBox = _scaleBox;
+        
+        //回転ボックス
+        var _rotateBox = document.createElementNS("http://www.w3.org/2000/svg", "g");
+        //var _rotateBoxSVG = document.createElementNS("http://www.w3.org/2000/svg", "use");
+        //_rotateBoxSVG.setAttribute("transform", "scale("+1/this.SVGSprite._viewPortScaleX+")");
+        //_rotateBoxSVG.setAttributeNS("http://www.w3.org/1999/xlink","xlink:href","svg/rotate.svg#rotate");
+        //_rotateBox.appendChild(_rotateBoxSVG);
+	var _rotateSVGSrc = '<svg xmlns="http://www.w3.org/2000/svg">';
+	_rotateSVGSrc += '<g id="rotate">';
+	_rotateSVGSrc += '<rect width="20" height="20" x="0" y="0" style="color:#000000;fill:#ffffff;stroke:#000000;stroke-width:0.5" />';
+	_rotateSVGSrc += '<g transform="translate(0, -6)">';
+	_rotateSVGSrc += '<path d="m 8.4005759,8.3507412 -4.1659224,-10e-8 -4.16592245,0 L 2.1516922,4.7429466 4.2346535,1.1351519 6.3176146,4.7429464 z"';
+	_rotateSVGSrc += '  transform="matrix(0,0.73507853,-0.73507853,0,19.836613,7.6490556)"';
+	_rotateSVGSrc += '  style="color:#000000;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.505;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />';
+	_rotateSVGSrc += '<path d="m 8.4005759,8.3507412 -4.1659224,-10e-8 -4.16592245,0 L 2.1516922,4.7429466 4.2346535,1.1351519 6.3176146,4.7429464 z"';
+	_rotateSVGSrc += '  transform="matrix(-0.73507853,0,0,-0.73507853,7.6878788,25.768073)"';
+	_rotateSVGSrc += '  style="color:#000000;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.505;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />';
+	_rotateSVGSrc += '<path d="m 4.3217759,21.80785 c 0,-6.426081 4.9898167,-11.635449 11.1450671,-11.635449"';
+	_rotateSVGSrc += '  style="color:#000000;fill:none;stroke:#000000;stroke-width:0.40038314;stroke-opacity:1;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />';
+	_rotateSVGSrc += '</g></g>';
+	_rotateSVGSrc += '</svg>';
+	var _rotateSVGXML = (new DOMParser()).parseFromString(_rotateSVGSrc, "text/xml");
+	var _rotateSVG = document.adoptNode(_rotateSVGXML.getElementById("rotate"));
+	_rotateSVG.setAttribute("transform", "scale("+1/this.SVGSprite._viewPortScaleX+")");
+	_rotateBox.appendChild(_rotateSVG);
+	this._rotateBox = _rotateBox;
+        
+        this._setBoxes();
+        
+        var self = this;
+        $(this._scaleBox).mousedown( function(e){ self._startScale(); });
+        $(this._rotateBox).mousedown( function(e){ self._startRotate(); });
+        	
+	//this.SVGSprite.svgElement.ownerSVGElement.addEventListener("mousemove", function(e){
+	$(window).mousemove(function(e){
+	    
+            self._doScale(e);
+            self._doRotate(e);
+        
+	});
+        
+	window.addEventListener('mouseup', function(e){
+            
+            self._endScale();
+            self._endRotate();
+            
+        }, true);
+
+        
+    };
+    
+    /**
+     * BOX調整
+     */
+    SVGBBoxTool.prototype._setBoxes = function(){
+        
+        var strokeWidth = (20/Math.abs(this.SVGSprite.scaleX))/this.SVGSprite._viewPortScaleX;
+        var boxWidth = (20/this.SVGSprite.scaleX);
+        
+        //枠
+        var _bbox = this._bbox;
+        _bbox.setAttribute("x", this.SVGSprite._svgTransformUtil.origOffset.x);
+        _bbox.setAttribute("y", this.SVGSprite._svgTransformUtil.origOffset.y);
+        _bbox.setAttribute("style", "opacity:0.6; fill:#fff; stroke:#fff; stroke-width:"+strokeWidth+"; stroke-linejoin:round;");
+        
+        //拡大縮小
+        var _scaleBox = this._scaleBox;
+        //_scaleBox.setAttribute("x", (this.SVGSprite._svgTransformUtil.origOffset.x+this.origWidth-(boxWidth/3))*this.SVGSprite.scaleX);
+        //_scaleBox.setAttribute("y", (this.SVGSprite._svgTransformUtil.origOffset.y+this.origHeight-(boxWidth/3))*this.SVGSprite.scaleX);
+        var _scaleX = (this.SVGSprite._svgTransformUtil.origOffset.x+this.origWidth-(boxWidth*.5))*this.SVGSprite.scaleX;
+        var _scaleY = (this.SVGSprite._svgTransformUtil.origOffset.y+this.origHeight-(boxWidth*.5))*this.SVGSprite.scaleX;
+        _scaleBox.setAttribute("transform", "scale("+1/this.SVGSprite.scaleX+") translate("+_scaleX+", "+_scaleY+")");
+        //_scaleBox.setAttribute("width", boxWidth);
+        //_scaleBox.setAttribute("height", boxWidth);
+        //_scaleBox.setAttribute("style", "opacity:1; fill:#fff; stroke:#000; stroke-width:"+(.5/this.SVGSprite.scaleX)+"; stroke-linejoin:round;cursor:se-resize");
+        _scaleBox.setAttribute("style", "cursor:se-resize");
+        
+        
+        //回転
+        var _rotateBox = this._rotateBox;
+        //_rotateBox.setAttribute("x", ((this.SVGSprite._svgTransformUtil.origOffset.x-(boxWidth*.6))*(this.SVGSprite.scaleX)));
+        //_rotateBox.setAttribute("y", ((this.SVGSprite._svgTransformUtil.origOffset.y-(boxWidth*.6))*(this.SVGSprite.scaleX)));
+        var _rotateX = (this.SVGSprite._svgTransformUtil.origOffset.x-(boxWidth*.8))*(this.SVGSprite.scaleX);
+        var _rotateY = (this.SVGSprite._svgTransformUtil.origOffset.y-(boxWidth*.8))*(this.SVGSprite.scaleX);
+        _rotateBox.setAttribute("transform", "scale("+1/this.SVGSprite.scaleX+") translate("+_rotateX+", "+_rotateY+")");
+        //_rotateBox.setAttribute("width", boxWidth);
+        //_rotateBox.setAttribute("height", boxWidth);
+        //_rotateBox.setAttribute("style", "opacity:1; fill:#eee; stroke:#000; stroke-width:"+(.5/this.SVGSprite.scaleX)+"; stroke-linejoin:round;cursor:pointer");
+        _rotateBox.setAttribute("style", "cursor:pointer");
+
+    };
+
+    /**
+     * 有効化
+     */
+    SVGBBoxTool.prototype.enable = function(){
+        
+        //枠を挿入
+        this.SVGSprite._svgTransformUtil.transformWrapper.appendChild(this._bbox);
+        this.SVGSprite._svgTransformUtil.transformWrapper.appendChild(this.SVGSprite._oapcityElement);
+        
+        //拡大縮小ボックスを挿入
+        this.SVGSprite._svgTransformUtil.transformWrapper.appendChild(this._scaleBox);
+        
+        //回転ボックスを挿入
+        this.SVGSprite._svgTransformUtil.transformWrapper.appendChild(this._rotateBox);
+        
+    };
+    
+    /**
+     * 無効化
+     */
+    SVGBBoxTool.prototype.disable = function(){
+
+        //枠を削除
+        this.SVGSprite._svgTransformUtil.transformWrapper.removeChild(this._bbox);
+        
+        //拡大縮小ボックスを削除
+        this.SVGSprite._svgTransformUtil.transformWrapper.removeChild(this._scaleBox);
+        
+        //回転ボックスを削除
+        this.SVGSprite._svgTransformUtil.transformWrapper.removeChild(this._rotateBox);
+        
+    };
+    
+    /**
+     * 拡大縮小開始
+     */
+    SVGBBoxTool.prototype._startScale = function(){
+
+        this._scaling = true;
+        this._scaleOrigWidth = this.SVGSprite.width;
+        this._scaleOrigHeight = this.SVGSprite.height;
+        
+    };
+    
+    /**
+     * 拡大縮小中
+     */
+    SVGBBoxTool.prototype._doScale = function(event) {
+        	   
+        if(this._scaling) {
+            	    
+            //マウスの初期位置設定
+            /*if(this.origMouseX == null) {
+            
+                this.origMouseX = event.pageX;
+                this.origMouseY = event.pageY;
+                            
+            }*/
+
+            /*            
+            //移動量
+            var x = ((event.clientX-this.origMouseX)/this.SVGSprite._viewPortScaleX);
+            var y = ((event.clientY-this.origMouseY)/this.SVGSprite._viewPortScaleY);
+            var _scale = Math.sqrt(x*x+y*y); //√(c-a)^2+(d-b)^2
+            _scale = (x<0||y<0)? -_scale : _scale;
+            
+            this.SVGSprite.width = this._scaleOrigWidth+_scale;
+	    this.SVGSprite.scaleY = this.SVGSprite.scaleX;
+            this.SVGSprite.height = this._scaleOrigHeight+_scale;
+	    */
+	    
+	    if(this.origMouseX == null) {
+		
+		this.origScreenCTM = this.SVGSprite._svgTransformUtil.transformWrapper.getScreenCTM();
+	    
+	    }
+	    
+	    var x = (this.isSafari)? event.pageX : event.pageX-$(window).scrollLeft();
+	    var y = (this.isSafari)? event.pageY : event.pageY-$(window).scrollTop();
+	    
+	    var ctm = this.origScreenCTM;
+			
+	    var p = this.SVGSprite.svgElement.ownerSVGElement.createSVGPoint();
+	    p.x = x;
+	    p.y = y;
+	    p = p.matrixTransform(ctm.inverse());
+	    
+            if(this.origMouseX == null) {
+            
+                this.origMouseX = p.x;
+		this.origScaleX = this.SVGSprite.scaleX;
+		this.origFlipped = ((this.SVGSprite.scaleY<0 && this.origScaleX>0) || (this.SVGSprite.scaleY>0 && this.origScaleX<0));
+		
+            }
+	    
+	    //var cp = this.SVGSprite.svgElement.ownerSVGElement.createSVGPoint();
+	    //cp.x = this.SVGSprite.width/2;//this.SVGSprite.x;
+	    //cp.y = this.SVGSprite.height/2;//this.SVGSprite.y;
+	    //cp = cp.matrixTransform(this.SVGSprite._svgTransformUtil.transformWrapper.getCTM().inverse());
+	    
+	    /*this.point.setAttribute("cx", p.x);
+            this.point.setAttribute("cy", p.y);
+	    this.center.setAttribute("cx", cp.x);
+            this.center.setAttribute("cy", cp.y);
+	    */
+	    
+	    var ratio = (p.x-(this.origMouseX/2))/(this.origMouseX/2); //中心点を基準とした初期座標とマウス座標の差分
+	    var scale = this.origScaleX*ratio;
+	    	    
+	    this.SVGSprite.scaleX = scale;
+	    this.SVGSprite.scaleY = (this.origFlipped)? -scale : scale;
+	    
+            this._setBoxes();
+                        
+        }
+        
+        	
+    };
+        
+     /**
+     * 拡大縮小完了
+     */
+    SVGBBoxTool.prototype._endScale = function() {
+        
+        this._scaling = false;
+        this.origMouseX = this.origMouseY = null;
+        
+    };
+    
+    /**
+     * 回転開始
+     */
+    SVGBBoxTool.prototype._startRotate = function(){
+
+        this._rotation = true;
+        this._rotateOrigRotation = this.SVGSprite.rotation;
+        this._rotateOrigX = this.SVGSprite.x;
+        this._rotateOrigY = this.SVGSprite.y;
+        
+    };
+    
+    /**
+     * 回転中
+     */
+    SVGBBoxTool.prototype._doRotate = function(event) {
+                
+        if(this._rotation) {
+            
+            var clientX = event.layerX/this.SVGSprite._viewPortScaleX;
+            var clientY = event.layerY/this.SVGSprite._viewPortScaleX;
+            
+            if(this._rotateInitRotate == null) {
+                
+                var _x = (clientX*this.SVGSprite._viewPortScaleX)-this._rotateOrigX;
+                var _y = (clientY*this.SVGSprite._viewPortScaleY)-this._rotateOrigY;
+                var _radian = Math.atan2(_y,_x);
+                var _rotation = _radian/(Math.PI/180);
+                this._rotateInitRotate = _rotation;
+                
+            }
+                        
+                        
+            //移動量
+            var x = (clientX)-this._rotateOrigX;
+            var y = (clientY)-this._rotateOrigY;
+            
+            var radian = Math.atan2(y,x);
+            var rotation = (radian/(Math.PI/180))-this._rotateInitRotate;
+            
+	    
+            //console.log(rotation);
+            /*
+            this.center.setAttribute("r", 20);
+            this.center.setAttribute("cx", this._rotateOrigX);
+            this.center.setAttribute("cy", this._rotateOrigY);
+            
+            this.point.setAttribute("r", 20);
+            this.point.setAttribute("cx", (clientX));
+            this.point.setAttribute("cy", (clientY));
+            this.point.setAttribute("fill", "#f00");
+	    */
+            
+            this.SVGSprite.rotation = this._rotateOrigRotation+rotation;
+            
+            this._setBoxes();
+                        
+        }
+        
+        	
+    };
+        
+     /**
+     * 回転完了
+     */
+    SVGBBoxTool.prototype._endRotate = function() {
+        	
+        this._rotation = false;
+        this._rotateInitRotate = null;
+        
+    };
+    
+    //グローバルオブジェクトに
+    global.SVGBBoxTool = SVGBBoxTool;
+    
+    
+})(this);/*!
+ * Copyright 2011, Mozilla Japan.
+ * Dual licensed under the MIT or GPL Version 3 licenses.
+ * https://bitbucket.org/foxkeh/svg-wallpaper-tool/src/tip/MIT-LICENSE.txt
+ * https://bitbucket.org/foxkeh/svg-wallpaper-tool/src/tip/GPL-LICENSE.txt
+ */
+(function(global){
+ 
+    var SVGDropBox = function(option){
+        
+        option = option || {};
+        this.imageWidth = option.width || 100;
+        this.imageHeight = option.height || 100;
+	this.validFile = false;
+        
+        this.init();
+    };
+    
+    SVGDropBox.MIMETYPE = {
+        svg : "image/svg+xml",
+        jpeg: "image/png",
+        png : "image/jpeg",
+        gif : "image/gif"
+    };
+    
+    /**
+     *初期化
+     */
+    SVGDropBox.prototype.init = function(){
+	
+        //ドロップ領域用の要素を作成
+        this.element = document.createElement("div");
+
+	//FileReaderが定義されていない場合は初期化せず
+	if(typeof FileReader === 'undefined') {
+	    
+	    return;
+	    
+	}
+        
+	//クラス名の付与
+	this.className = "SVGDropBox";
+        this.element.className = this.className;
+	
+        //Dropサポートの有無        
+        if(this.isDropSupported()) { //Dropが有効の場合
+            
+            var p = document.createElement("p");
+            p.innerHTML = "drop File";
+            
+            var self = this;
+            
+            this.element.addEventListener("dragenter", function(e){
+		e.stopPropagation();
+		e.preventDefault();
+                
+                self.element.className = self.className+" SVGDropBoxDragover";
+                
+	    }, false);
+			
+	    this.element.addEventListener("dragover", function(e){
+		e.stopPropagation();
+		e.preventDefault();
+	    }, false);
+            
+            this.element.addEventListener("dragleave", function(e){
+                e.stopPropagation();
+		e.preventDefault();
+
+                self.element.className = (typeof self.content == "undefined")? self.className : self.className+" SVGDropBOXDroped";                
+
+            }, false);
+            
+            this.element.addEventListener("drop",function(e){
+		
+                e.stopPropagation();
+                e.preventDefault();
+                
+                self.element.className = self.className;
+                
+                //ドロップされたファイルの取得
+                var dt = e.dataTransfer;
+                var files = dt.files;
+                
+                //ファイルのロード
+                if(files.length > 0) {
+		    
+                    self.loadFile(files[0]);
+		
+		}
+                
+            },false);
+            
+            this.element.appendChild(p);
+            
+        } else { //Dropが無効の場合
+
+            
+            var p = document.createElement("p");
+            p.innerHTML = "select File";
+            
+            var input = document.createElement("input");
+            input.setAttribute("type", "file");
+            
+            var self = this;
+            input.addEventListener("change", function(e){
+				
+		var file = e.currentTarget.files[0];
+		self.loadFile(file);
+                
+            }, false);
+            
+            this.element.appendChild(p);
+            this.element.appendChild(input);
+            
+        }
+        
+     
+    };
+    
+    /**
+     * via Modernizr v1.6
+     */
+    SVGDropBox.prototype.isDropSupported = function(){
+	
+        var element = document.createElement('div');
+        var eventName = 'ondrop';
+
+        // When using `setAttribute`, IE skips "unload", WebKit skips "unload" and "resize", whereas `in` "catches" those
+        var isSupported = (eventName in element);
+
+        if (!isSupported) {
+          // If it has no `setAttribute` (i.e. doesn't implement Node interface), try generic element
+          if (!element.setAttribute) {
+            element = document.createElement('div');
+          }
+          if (element.setAttribute && element.removeAttribute) {
+            element.setAttribute(eventName, '');
+            isSupported = typeof element[eventName] == 'function';
+
+            // If property was created, "remove it" (by setting value to `undefined`)
+            if (typeof element[eventName] != 'undefined') {
+              element[eventName] = undefined;
+            }
+            element.removeAttribute(eventName);
+          }
+        }
+
+        element = null;
+        return isSupported;
+    
+    };
+    
+    SVGDropBox.prototype.isSVG = function(file){
+      
+        return (file.type == SVGDropBox.MIMETYPE.svg);
+        
+    };
+    
+    SVGDropBox.prototype.isImage = function(file){
+        
+        var type = file.type;
+        return (type==SVGDropBox.MIMETYPE.jpeg||type==SVGDropBox.MIMETYPE.gif||type==SVGDropBox.MIMETYPE.png);
+        
+    }
+    
+    SVGDropBox.prototype.loadFile = function(file) {
+        
+	//サイズが0byteだった場合は処理をしない Firefox3.6のバグ対策
+	if(file.size > 0) {
+	
+	    //ファイルタイプを判別
+	    this.fileType = this.isSVG(file)? "svg" : this.isImage(file)? "image" : "other";
+	    	    
+	    var reader = new FileReader();
+	    
+	    var self = this;
+	    reader.onload = function(e){ self.onFileLoaded(e);};
+	    
+	    if(this.fileType=="svg") {
+		
+		reader.readAsText(file, "utf-8");
+		this.validFile = true;
+		
+	    } else if(this.fileType=="image"){
+		
+		reader.readAsDataURL(file);
+		this.validFile  = true;
+		
+	    }
+	    
+	}
+	
+    };
+    
+    SVGDropBox.prototype.onFileLoaded = function(e) {
+        
+        var result = e.target.result;
+        var container = document.createElement("div");
+        container.className = "SVGDropBoxContainer";
+        
+        if(this.fileType == "svg") {
+            
+            //パース
+            var parser = new DOMParser();  
+            var svgDoc = parser.parseFromString(result, "text/xml");
+                        
+            var svgElement = document.importNode(svgDoc.getElementsByTagName("svg")[0], true);
+            
+            var width = svgElement.width.baseVal.value;
+            var height = svgElement.height.baseVal.value;
+            var aspect = height/width;
+
+            var imageWidth = (this.imageWidth*aspect < this.imageHeight)? this.imageWidth : this.imageHeight/aspect;
+            var imageHeight = (this.imageWidth*aspect < this.imageHeight)? this.imageWidth*aspect : this.imageHeight;
+            
+            svgElement.setAttribute("viewBox", "0 0 "+width+" "+height);
+            svgElement.setAttribute("width", imageWidth);
+            svgElement.setAttribute("height", imageHeight);
+                    
+            var contentElement = svgElement;
+	    
+	    result = svgDoc.getElementsByTagName("svg")[0];
+                
+        } else if(this.fileType == "image") {
+            
+            var image = document.createElement("img");
+            image.src = result;
+            image.setAttribute("width", this.imageWidth);
+            
+            var contentElement = image;
+            
+        }
+        
+        container.appendChild(contentElement);
+
+        var children = this.element.childNodes;
+        
+        for(var i=0,l=children.length; i<l; i++) {
+            
+            this.element.removeChild(children[i]);
+            
+        }
+        
+        this.element.appendChild(container);
+	this.element.className = self.className+" SVGDropBOXDroped";
+	
+	this.contentElement = contentElement;
+        this.container = container;
+        this.content = result;
+        
+    };
+    
+    
+    
+    global.SVGDropBox = SVGDropBox;
+ 
+})(window);/*!
+ * Copyright 2011, Mozilla Japan.
+ * Dual licensed under the MIT or GPL Version 3 licenses.
+ * https://bitbucket.org/foxkeh/svg-wallpaper-tool/src/tip/MIT-LICENSE.txt
+ * https://bitbucket.org/foxkeh/svg-wallpaper-tool/src/tip/GPL-LICENSE.txt
+ */
+(function(global){
  /**
   * クロスブラウザ用ゲッターセッター関数
   * @param {Object} obj ゲッターセッターを設定したいオブジェクト

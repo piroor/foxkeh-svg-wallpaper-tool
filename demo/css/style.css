@@ -290,8 +290,16 @@ h1 {
 	padding-top: 20px;
 	clear: both;
 }
+
 address {
 	text-align: center;
 	font-size: 10px;
 	font-family: arial, sans-serif;
+}
+
+.svgWallpaperTool_loading {
+	padding-left: 20px;
+	background-image: url(../images/loading.gif);
+	background-repeat: no-repeat;
+	background-position: 0 center;
 }
