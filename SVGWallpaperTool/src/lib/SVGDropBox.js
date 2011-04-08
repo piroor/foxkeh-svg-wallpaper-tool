@@ -1,9 +1,3 @@
-/*!
- * Copyright 2011, Mozilla Japan.
- * Dual licensed under the MIT or GPL Version 3 licenses.
- * https://bitbucket.org/foxkeh/svg-wallpaper-tool/src/tip/MIT-LICENSE.txt
- * https://bitbucket.org/foxkeh/svg-wallpaper-tool/src/tip/GPL-LICENSE.txt
- */
 (function(global){
  
     var SVGDropBox = function(option){
