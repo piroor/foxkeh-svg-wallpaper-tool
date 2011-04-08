@@ -2,3 +2,6 @@ syntax:regexp
 /\.
 DS_Store
 \.DS_Store
+test
+demo2
+.htaccess

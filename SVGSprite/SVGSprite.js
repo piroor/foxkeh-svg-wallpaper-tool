@@ -585,7 +585,7 @@
 			    }
 					   
                 //transform用ユーティリティ
-                this._svgTransformUtil = new SVGUtil.Transform(_svgElement);
+                this._svgTransformUtil = new Transform(_svgElement);
 		
 		//originalElement
 		this._originalElement = this._svgTransformUtil.sourceSVGElement;
