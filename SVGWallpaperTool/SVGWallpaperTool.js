@@ -14,15 +14,12 @@
  * http://www.modernizr.com/license/
  *
  */
-/*!
- * Copyright 2011, Mozilla Japan.
- * Dual licensed under the MIT or GPL Version 3 licenses.
- * https://bitbucket.org/foxkeh/svg-wallpaper-tool/src/tip/MIT-LICENSE.txt
- * https://bitbucket.org/foxkeh/svg-wallpaper-tool/src/tip/GPL-LICENSE.txt
- */
-(function(global){
+
+(function(){
 	
-	function loadSVG(url,callback) {
+	var SVGUtil = {};
+		
+	SVGUtil.loadSVG = function (url,callback) {
 		 
 		var xhr = new XMLHttpRequest();
 		xhr.open('GET', url, true);
@@ -45,29 +42,16 @@
  
 		};
 
-
 		xhr.send(null);
- 
  
 	};
 	
 	//グローバルオブジェクトに
-	if(typeof SVGUtil == "undefined") {
-		global.SVGUtil = {};
-	}
+	window.SVGUtil = SVGUtil;
 	
-	global.SVGUtil.loadSVG = loadSVG;
-	
-})(this);
-/*!
- * Copyright 2011, Mozilla Japan.
- * Dual licensed under the MIT or GPL Version 3 licenses.
- * https://bitbucket.org/foxkeh/svg-wallpaper-tool/src/tip/MIT-LICENSE.txt
- * https://bitbucket.org/foxkeh/svg-wallpaper-tool/src/tip/GPL-LICENSE.txt
- */
-(function(global){
+}());(function(){
     
-    var SVGBBoxTool = function(SVGSprite,options) {
+    var SVGBoundingBox = function(SVGSprite,options) {
          
         options = (typeof options == "undefined")? {} : options;
         
@@ -97,7 +81,7 @@
     /**
      * 初期化する
      */
-    SVGBBoxTool.prototype.init = function(){
+    SVGBoundingBox.prototype.init = function(){
 
         this.origMouseX = this.origMouseY = this._rotateInitRotate = null;      
         this.origWidth = this.SVGSprite.width;
@@ -190,7 +174,7 @@
     /**
      * BOX調整
      */
-    SVGBBoxTool.prototype._setBoxes = function(){
+    SVGBoundingBox.prototype._setBoxes = function(){
         
         var strokeWidth = (20/Math.abs(this.SVGSprite.scaleX))/this.SVGSprite._viewPortScaleX;
         var boxWidth = (20/this.SVGSprite.scaleX);
@@ -231,7 +215,7 @@
     /**
      * 有効化
      */
-    SVGBBoxTool.prototype.enable = function(){
+    SVGBoundingBox.prototype.enable = function(){
         
         //枠を挿入
         this.SVGSprite._svgTransformUtil.transformWrapper.appendChild(this._bbox);
@@ -248,7 +232,7 @@
     /**
      * 無効化
      */
-    SVGBBoxTool.prototype.disable = function(){
+    SVGBoundingBox.prototype.disable = function(){
 
         //枠を削除
         this.SVGSprite._svgTransformUtil.transformWrapper.removeChild(this._bbox);
@@ -264,7 +248,7 @@
     /**
      * 拡大縮小開始
      */
-    SVGBBoxTool.prototype._startScale = function(){
+    SVGBoundingBox.prototype._startScale = function(){
 
         this._scaling = true;
         this._scaleOrigWidth = this.SVGSprite.width;
@@ -275,7 +259,7 @@
     /**
      * 拡大縮小中
      */
-    SVGBBoxTool.prototype._doScale = function(event) {
+    SVGBoundingBox.prototype._doScale = function(event) {
         	   
         if(this._scaling) {
             	    
@@ -350,7 +334,7 @@
      /**
      * 拡大縮小完了
      */
-    SVGBBoxTool.prototype._endScale = function() {
+    SVGBoundingBox.prototype._endScale = function() {
         
         this._scaling = false;
         this.origMouseX = this.origMouseY = null;
@@ -360,7 +344,7 @@
     /**
      * 回転開始
      */
-    SVGBBoxTool.prototype._startRotate = function(){
+    SVGBoundingBox.prototype._startRotate = function(){
 
         this._rotation = true;
         this._rotateOrigRotation = this.SVGSprite.rotation;
@@ -372,7 +356,7 @@
     /**
      * 回転中
      */
-    SVGBBoxTool.prototype._doRotate = function(event) {
+    SVGBoundingBox.prototype._doRotate = function(event) {
                 
         if(this._rotation) {
             
@@ -422,7 +406,7 @@
      /**
      * 回転完了
      */
-    SVGBBoxTool.prototype._endRotate = function() {
+    SVGBoundingBox.prototype._endRotate = function() {
         	
         this._rotation = false;
         this._rotateInitRotate = null;
@@ -430,16 +414,10 @@
     };
     
     //グローバルオブジェクトに
-    global.SVGBBoxTool = SVGBBoxTool;
+    window.SVGBoundingBox = SVGBoundingBox;
     
     
-})(this);/*!
- * Copyright 2011, Mozilla Japan.
- * Dual licensed under the MIT or GPL Version 3 licenses.
- * https://bitbucket.org/foxkeh/svg-wallpaper-tool/src/tip/MIT-LICENSE.txt
- * https://bitbucket.org/foxkeh/svg-wallpaper-tool/src/tip/GPL-LICENSE.txt
- */
-(function(global){
+}());(function(global){
  
     var SVGDropBox = function(option){
         
@@ -690,13 +668,7 @@
     
     global.SVGDropBox = SVGDropBox;
  
-})(window);/*!
- * Copyright 2011, Mozilla Japan.
- * Dual licensed under the MIT or GPL Version 3 licenses.
- * https://bitbucket.org/foxkeh/svg-wallpaper-tool/src/tip/MIT-LICENSE.txt
- * https://bitbucket.org/foxkeh/svg-wallpaper-tool/src/tip/GPL-LICENSE.txt
- */
-(function(global){
+})(window);(function(global){
  /**
   * クロスブラウザ用ゲッターセッター関数
   * @param {Object} obj ゲッターセッターを設定したいオブジェクト
@@ -1295,7 +1267,7 @@
        this.buttonMode = true;
  
        //BBoxTool
-       this.SVGBBoxTool = null;//new SVGBBoxTool(this);
+       this.SVGBoundingBox = null;//new SVGBoundingBox(this);
  
        //イベント処理
        var self = this;
@@ -1321,8 +1293,8 @@
 
 	content.appendChild(this.svgElement);
 	
-	if(this.SVGBBoxTool == null) {
-            this.SVGBBoxTool = new SVGBBoxTool(this);
+	if(this.SVGBoundingBox == null) {
+            this.SVGBoundingBox = new SVGBoundingBox(this);
 	}
 	
 };
@@ -1362,7 +1334,7 @@
               });
               
 	      //BBoxToolを有効に
-	      this.SVGBBoxTool.enable();
+	      this.SVGBoundingBox.enable();
 	      
               $(this).trigger("activated");
        }
@@ -1377,7 +1349,7 @@
        if(this.active) {
               
 	      //BBoxToolwを無効に
-	      this.SVGBBoxTool.disable();
+	      this.SVGBoundingBox.disable();
 	      
               this.active = false;
               $(this).trigger("deactivated");
