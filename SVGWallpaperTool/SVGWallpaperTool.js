@@ -1,4 +1,7 @@
 /*!
+ * SVG Wallpaper Tool
+ * https://bitbucket.org/foxkeh/svg-wallpaper-tool/
+ *
  * Copyright 2011, Mozilla Japan.
  * Dual licensed under the MIT or GPL Version 3 licenses.
  * https://bitbucket.org/foxkeh/svg-wallpaper-tool/src/tip/MIT-LICENSE.txt
@@ -14,8 +17,7 @@
  * http://www.modernizr.com/license/
  *
  */
-
-(function(){
+ (function(){
 	
 	var SVGUtil = {};
 		
@@ -669,6 +671,9 @@
     global.SVGDropBox = SVGDropBox;
  
 })(window);(function(global){
+    
+  var SWT = {};
+ 
  /**
   * クロスブラウザ用ゲッターセッター関数
   * @param {Object} obj ゲッターセッターを設定したいオブジェクト
@@ -676,7 +681,7 @@
   * @param {Function} setter セッター関数
   * @param {Function} getter ゲッター関数
  */
- function defineSetterGetter(obj, name, setter, getter) {
+ SWT._defineSetterGetter = function(obj, name, setter, getter) {
 
    //__defineSetter__が未定義かつObject.definePropertyが有効な場合
    if (!Object.prototype.__defineSetter__ && Object.defineProperty({},"x",{get: function(){return true}}).x) {
@@ -693,14 +698,12 @@
    
    }
 
- }; 
-
- var SVGWallpaperTool = {};
+ };
 
  /**
   * 初期化
   */
- SVGWallpaperTool.SVGWallpaperTool = function(param) {
+ SWT.SVGWallpaperTool = function(param) {
        
        if(!param) {
 	      return;
@@ -712,7 +715,7 @@
  
 	//壁紙
        if(param.wallpaperSVG) {
-	      this.wallpaper = new SVGWallpaperTool.Wallpaper($("#"+param.wallpaperSVG)[0]);
+	      this.wallpaper = new SWT.Wallpaper($("#"+param.wallpaperSVG)[0]);
        } else {
 	      return;
        }
@@ -725,29 +728,29 @@
  	//壁紙サイズ設定
 	if(param.sizeSelector) {
 	      var select = $("#"+param.sizeSelector);
-	      this.sizeSelectorView = new SVGWallpaperTool.WallpaperSizeSelectorView(select);
-	      this.sizeSelectorController = new SVGWallpaperTool.WallpaperSizeSelectorController(this.sizeSelectorView, this.wallpaper);
+	      this.sizeSelectorView = new SWT.WallpaperSizeSelectorView(select);
+	      this.sizeSelectorController = new SWT.WallpaperSizeSelectorController(this.sizeSelectorView, this.wallpaper);
 	}
  
 	//背景画像リストコントローラー
 	if(param.backgroundList) {
 		var list = $("#"+param.backgroundList);
-		this.backgroundListController = new SVGWallpaperTool.BackgroundListController(this.wallpaper, list);
+		this.backgroundListController = new SWT.BackgroundListController(this.wallpaper, list);
 	}
  
 	//パーツリスト
 	if(param.partsList) {
 		
 		var partsList = $("#"+param.partsList);
-		this.partsListView = new SVGWallpaperTool.PartsListView(partsList);
-		this.partsListController = new SVGWallpaperTool.PartsListController(this.wallpaper, this.partsListView);
+		this.partsListView = new SWT.PartsListView(partsList);
+		this.partsListController = new SWT.PartsListController(this.wallpaper, this.partsListView);
   
 	}
  
 	//ダウンロードボタン
 	if(param.downLoadButton) {
 		var button = $("#"+param.downLoadButton);
-		this.downloadButtonController = new SVGWallpaperTool.DownloadButtonController(this.wallpaper, button);
+		this.downloadButtonController = new SWT.DownloadButtonController(this.wallpaper, button);
 	}
  
        //パーツコントローラー
@@ -758,14 +761,14 @@
                      alpha: param.alphaOptions,
                      rotation: param.rotationOptions
               };
-              this.partsControllView = new SVGWallpaperTool.PartsControllView(this.wallpaper, partsControll, options);
-              this.partsControllController = new SVGWallpaperTool.PartsControllController(this.wallpaper, this.partsControllView);
+              this.partsControllView = new SWT.PartsControllView(this.wallpaper, partsControll, options);
+              this.partsControllController = new SWT.PartsControllController(this.wallpaper, this.partsControllView);
        }
        
        //インジケーター
        if(param.indicator) {
               var indicator = $("#"+param.indicator);
-              this.indicatorView = new SVGWallpaperTool.IndicatorView(this.wallpaper, indicator);
+              this.indicatorView = new SWT.IndicatorView(this.wallpaper, indicator);
        }
        
        
@@ -792,10 +795,18 @@
  
  };
  
+ //グローバルオブジェクト化
+ global.SWT = SWT;
+ global.SVGWallpaperTool = SWT.SVGWallpaperTool;
+ 
+}(window));(function(global){
+
+ var SWT = global.SWT;
+
  /**
   * 壁紙
   */
- SVGWallpaperTool.Wallpaper = function(svg, partsLimit) {
+ SWT.Wallpaper = function(svg, partsLimit) {
 	
 	this.svg = svg;
 	this._origWidth = svg.width.baseVal.value;
@@ -810,7 +821,7 @@
  };
  
  //壁紙を初期化
- SVGWallpaperTool.Wallpaper.prototype.init = function() {
+ SWT.Wallpaper.prototype.init = function() {
  
 	//レイヤーを作成
 	var backgroundLayer = document.createElementNS("http://www.w3.org/2000/svg", "g");
@@ -844,7 +855,7 @@
  };
  
  //ロード中オブジェクトを追加
- SVGWallpaperTool.Wallpaper.prototype._addLoadingObjects = function(url) {
+ SWT.Wallpaper.prototype._addLoadingObjects = function(url) {
        
        this._loadingObjects.push(url);
    
@@ -857,7 +868,7 @@
  };
  
  //ロード中オブジェクトを削除
- SVGWallpaperTool.Wallpaper.prototype._removeLoadingObjects = function(index) {
+ SWT.Wallpaper.prototype._removeLoadingObjects = function(index) {
        
        //this._loadingObjects.splice(index,1);
        this._loadingObjects[index] = "";
@@ -875,12 +886,12 @@
  };
  
  //リフレッシュ
- SVGWallpaperTool.Wallpaper.prototype._refresh = function() {
+ SWT.Wallpaper.prototype._refresh = function() {
 	$(this.svg).hide().show();
  };
  
  //viewBoxを設定
- SVGWallpaperTool.Wallpaper.prototype.setViewBox = function(width, height) {
+ SWT.Wallpaper.prototype.setViewBox = function(width, height) {
 	
 	var _width = this._origWidth;
 	var _height = Math.floor(_width * (height/width));
@@ -896,14 +907,14 @@
  };
  
  //viewBoxを取得
- SVGWallpaperTool.Wallpaper.prototype.getViewBox = function() {
+ SWT.Wallpaper.prototype.getViewBox = function() {
  
 	return this.svg.viewBox.baseVal;
  
  };
  
  //copyrightを設定
- SVGWallpaperTool.Wallpaper.prototype.setCopyright = function(svgElement) {
+ SWT.Wallpaper.prototype.setCopyright = function(svgElement) {
 
 	//既存の画像をリムーブ
 	if(this._copyright) {
@@ -920,7 +931,7 @@
  };
  
  //コピーライトのサイズ調整
- SVGWallpaperTool.Wallpaper.prototype._adjustmentCopyrightSize = function() {
+ SWT.Wallpaper.prototype._adjustmentCopyrightSize = function() {
 	
 	 if(this._copyright) {
  
@@ -938,7 +949,7 @@
  };
  
  //コピーライトをロード
- SVGWallpaperTool.Wallpaper.prototype.loadCopyright = function(url) {
+ SWT.Wallpaper.prototype.loadCopyright = function(url) {
 	
 	var self = this;
         
@@ -954,7 +965,7 @@
  };
  
  //背景を設定
- SVGWallpaperTool.Wallpaper.prototype.setBackground = function(svgElement) {
+ SWT.Wallpaper.prototype.setBackground = function(svgElement) {
 	 
 	//既存の背景をリムーブ
 	if(this._background) {
@@ -972,7 +983,7 @@
  };
  
  //背景画像のサイズ調整
- SVGWallpaperTool.Wallpaper.prototype._adjustmentBackgroundSize = function() {
+ SWT.Wallpaper.prototype._adjustmentBackgroundSize = function() {
 	
 	 if(this._background) {
  
@@ -1008,7 +1019,7 @@
  };
 
  //背景をロード
- SVGWallpaperTool.Wallpaper.prototype.loadBackground = function(url) {
+ SWT.Wallpaper.prototype.loadBackground = function(url) {
 	
        var self = this;
  
@@ -1024,7 +1035,7 @@
  };
  
  //パーツを追加
- SVGWallpaperTool.Wallpaper.prototype.addParts = function(parts) {
+ SWT.Wallpaper.prototype.addParts = function(parts) {
 	
 	if(this.parts.length < this.partsLimit) {
  
@@ -1050,7 +1061,7 @@
  };
  
  //パーツを削除
- SVGWallpaperTool.Wallpaper.prototype.removeParts = function(parts) {
+ SWT.Wallpaper.prototype.removeParts = function(parts) {
        
        var newPartsList = [];
        
@@ -1083,7 +1094,7 @@
  };
  
  //パーツをアクティブに
- SVGWallpaperTool.Wallpaper.prototype._activatedPartsHandler = function(e) {
+ SWT.Wallpaper.prototype._activatedPartsHandler = function(e) {
 	
 	var parts = e.currentTarget;
 	this.activeParts = parts;
@@ -1106,7 +1117,7 @@
  };
  
  //全パーツを非アクティブに
- SVGWallpaperTool.Wallpaper.prototype.deactivateParts = function(e) {
+ SWT.Wallpaper.prototype.deactivateParts = function(e) {
    
        	for(var i=0,l=this.parts.length; i<l; i++) {
 					
@@ -1120,13 +1131,13 @@
  };
  
  //パーツをロード
- SVGWallpaperTool.Wallpaper.prototype.loadParts = function(param) {
+ SWT.Wallpaper.prototype.loadParts = function(param) {
  
 	 var self = this;
 	 
 	 if(typeof param.svgElement != "undefined" && param.svgElement instanceof SVGElement) {
 	    
-	    var parts = new SVGWallpaperTool.Parts(param.svgElement);
+	    var parts = new SWT.Parts(param.svgElement);
 	    var viewBox = self.getViewBox();
 	    
 	    var viewBox = this.getViewBox();
@@ -1140,7 +1151,7 @@
 	    
 	    SVGUtil.loadSVG(param.file, function(svg){
 		   
-		 var parts = new SVGWallpaperTool.Parts(svg);
+		 var parts = new SWT.Parts(svg);
 		   
 		 var viewBox = self.getViewBox();
 		 parts.x = viewBox.width/2;
@@ -1160,7 +1171,7 @@
  };
 
  //パーツの階層を１つ上げる
- SVGWallpaperTool.Wallpaper.prototype.upPartsIndex = function(parts) {
+ SWT.Wallpaper.prototype.upPartsIndex = function(parts) {
        
        var currentIndex = parts.index;
        var targetIndex = currentIndex+1;
@@ -1195,7 +1206,7 @@
  };
  
  //パーツの階層を１つ下げる
- SVGWallpaperTool.Wallpaper.prototype.downPartsIndex = function(parts) {
+ SWT.Wallpaper.prototype.downPartsIndex = function(parts) {
        
        var currentIndex = parts.index;
        var targetIndex = currentIndex-1;
@@ -1232,7 +1243,7 @@
  
 
  //SVGを出力
- SVGWallpaperTool.Wallpaper.prototype.toDataURL = function() {
+ SWT.Wallpaper.prototype.toDataURL = function() {
 	
 	//クローン
 	var tmpSVG = this.svg.cloneNode(true);
@@ -1252,12 +1263,15 @@
 	return dataURL;
   
  };
- 
- 
+
+}(window));(function(global){
+
+ var SWT = global.SWT;
+
  /**
   * パーツ
   */
- SVGWallpaperTool.Parts = function(svgElement) {
+ SWT.Parts = function(svgElement) {
 	
        this.constructor(svgElement);
        this.index = null;
@@ -1275,9 +1289,9 @@
  
  };
  
- SVGWallpaperTool.Parts.prototype = new SVGSprite.Sprite;
+ SWT.Parts.prototype = new SVGSprite.Sprite;
  
- SVGWallpaperTool.Parts.prototype.setSvgElement = function(svgElement) {
+ SWT.Parts.prototype.setSvgElement = function(svgElement) {
 
        this._svgElement = svgElement;
      
@@ -1289,7 +1303,7 @@
  * @param {SVGElement} content 追加先の要素
  *
  */
- SVGWallpaperTool.Parts.prototype.appendTo = function(content) {
+ SWT.Parts.prototype.appendTo = function(content) {
 
 	content.appendChild(this.svgElement);
 	
@@ -1301,7 +1315,7 @@
 
  
  //scale
- defineSetterGetter(SVGWallpaperTool.Parts.prototype, "scale",
+ SWT._defineSetterGetter(SWT.Parts.prototype, "scale",
        
        //setter
        function(scale) {
@@ -1322,7 +1336,7 @@
  );
  
  //active
- SVGWallpaperTool.Parts.prototype.activate = function() {
+ SWT.Parts.prototype.activate = function() {
 	 
        if(!this.active) {
 	
@@ -1344,7 +1358,7 @@
  };
  
  //deactive
- SVGWallpaperTool.Parts.prototype.deactive = function() {
+ SWT.Parts.prototype.deactive = function() {
 	
        if(this.active) {
               
@@ -1360,7 +1374,7 @@
  
  
  //ドラッグを開始する
- SVGWallpaperTool.Parts.prototype.setStartDrag = function() {
+ SWT.Parts.prototype.setStartDrag = function() {
 	
 	var self = this;
  
@@ -1373,64 +1387,14 @@
 
  };
  
- /**
-  * キャンバスサイズセレクターView
-  */
- SVGWallpaperTool.WallpaperSizeSelectorView = function(selectElement) {
-	
-	this.selectElement = $(selectElement);
-	 
-	//event
-	var self = this;
-	this.selectElement.bind("change", function(){
-		$(self).trigger("change"); 
-	});
- 
- };
- 
- SVGWallpaperTool.WallpaperSizeSelectorView.prototype.getWidth = function() {
- 
-	var value = this.selectElement.val().split("x");
-	return value[0];
- 
- };
+}(window));(function(global){
 
- SVGWallpaperTool.WallpaperSizeSelectorView.prototype.getHeight = function() {
- 
-	var value = this.selectElement.val().split("x");
-	return value[1];
- 
- };
- 
- /**
-  * キャンバスサイズセレクターController
-  */
- SVGWallpaperTool.WallpaperSizeSelectorController = function(sizeSelectorView, wallpaper) {
- 
-	this.sizeSelectorView = sizeSelectorView;
-	this.wallpaper = wallpaper;
-	
-	this.changeHandler(null);
+ var SWT = global.SWT;
 
-	//event
-	var self = this;
-	$(this.sizeSelectorView).bind("change", function(e){ self.changeHandler(e) });
- 
- };
- 
- SVGWallpaperTool.WallpaperSizeSelectorController.prototype.changeHandler = function(e) {
-
-	var width = this.sizeSelectorView.getWidth();
-	var height = this.sizeSelectorView.getHeight();
- 
-	this.wallpaper.setViewBox(width, height);
- 
- };
- 
  /**
   * パーツコントロールView
   */
- SVGWallpaperTool.PartsControllView = function(wallpaper, parentElement, options) {
+ SWT.PartsControllView = function(wallpaper, parentElement, options) {
        
        this.wallpaper = wallpaper;
        this.parentElement = $(parentElement);
@@ -1445,7 +1409,7 @@
  };
  
  //初期化
- SVGWallpaperTool.PartsControllView.prototype.init = function(options) {
+ SWT.PartsControllView.prototype.init = function(options) {
        
        //要素作成
        var html = '<dl>';
@@ -1516,7 +1480,7 @@
  };
  
  //スライダー作成
- SVGWallpaperTool.PartsControllView.prototype._createSlider = function(className,option) {
+ SWT.PartsControllView.prototype._createSlider = function(className,option) {
        
        var min = (typeof option.min == "number")? option.min : 0;
        var max = (typeof option.max == "number")? option.max : 100;
@@ -1535,7 +1499,7 @@
  };
 
  //有効
- SVGWallpaperTool.PartsControllView.prototype.enable = function() {
+ SWT.PartsControllView.prototype.enable = function() {
        
        if(this.wallpaper.activeParts != null) {
               
@@ -1556,7 +1520,7 @@
  };
  
  //無効
- SVGWallpaperTool.PartsControllView.prototype.disable = function() {
+ SWT.PartsControllView.prototype.disable = function() {
        
        //this.scaleControll.slider("disable");
        this.alphaControll.slider("disable");
@@ -1571,10 +1535,14 @@
        this.isEnable = false;
  };
  
+}(window));(function(global){
+
+ var SWT = global.SWT;
+
  /**
   * パーツコントロールController
   */
- SVGWallpaperTool.PartsControllController = function(wallpaper, partsControllView) {
+ SWT.PartsControllController = function(wallpaper, partsControllView) {
        
        this.wallpaper = wallpaper;
        this.partsControllView = partsControllView;
@@ -1584,7 +1552,7 @@
        
  };
  
- SVGWallpaperTool.PartsControllController.prototype.init = function() {
+ SWT.PartsControllController.prototype.init = function() {
        
        var partsControllView = this.partsControllView;
        var self = this;
@@ -1637,10 +1605,14 @@
        
  };
  
+}(window));(function(global){
+
+ var SWT = global.SWT;
+
  /**
   * パーツリストView
   */
- SVGWallpaperTool.PartsListView = function(partsList) {
+ SWT.PartsListView = function(partsList) {
 	
 	this.partsListElement = $(partsList);
 	this.list = this.partsListElement.find("> li a");
@@ -1653,13 +1625,13 @@
  
  };
  
- SVGWallpaperTool.PartsListView.prototype.init = function() {
+ SWT.PartsListView.prototype.init = function() {
 
     this.appendSVGDropBox();
 
  };
  
- SVGWallpaperTool.PartsListView.prototype.appendSVGDropBox = function() {
+ SWT.PartsListView.prototype.appendSVGDropBox = function() {
 
     var svgDropBox = new SVGDropBox({width:70, height:70});
     var list = document.createElement("li");
@@ -1682,7 +1654,7 @@
     
  };
  
- SVGWallpaperTool.PartsListView.prototype.select = function(selectedList,isSVGDropBox) {
+ SWT.PartsListView.prototype.select = function(selectedList,isSVGDropBox) {
 	
 	this.selectedListIsSVGDropBox = (typeof isSVGDropBox == "boolean")? isSVGDropBox : false;
 	this.selected = selectedList;
@@ -1690,10 +1662,14 @@
  
  };
  
+}(window));(function(global){
+
+ var SWT = global.SWT;
+ 
  /**
   * パーツリストController
   */
- SVGWallpaperTool.PartsListController = function(wallpaper,partsListView) {
+ SWT.PartsListController = function(wallpaper,partsListView) {
 	
         this.wallpaper = wallpaper;
 	this.partsListView = partsListView;
@@ -1704,7 +1680,7 @@
 
  };
  
- SVGWallpaperTool.PartsListController.prototype.selectedHandler = function() {
+ SWT.PartsListController.prototype.selectedHandler = function() {
 	
 	if(this.partsListView.selectedListIsSVGDropBox) {
 	    
@@ -1742,12 +1718,16 @@
 	    var url = $(this.partsListView.selected).attr("href");
 	    this.wallpaper.loadParts({file: url});
 	}
- };
+ }; 
  
+}(window));(function(global){
+
+ var SWT = global.SWT;
+
  /**
   * 背景リストコントローラー
   */
- SVGWallpaperTool.BackgroundListController = function(wallpaper, element) {
+ SWT.BackgroundListController = function(wallpaper, element) {
 	
 	this.wallpaper = wallpaper;
 	this.list = $(element).find("> li a");
@@ -1760,7 +1740,7 @@
  };
  
  //選択時の動作
- SVGWallpaperTool.BackgroundListController.prototype.select = function(element) {
+ SWT.BackgroundListController.prototype.select = function(element) {
  
 	var url = $(element).attr("href");
  
@@ -1769,11 +1749,14 @@
  
  };
  
- 
+}(window));(function(global){
+
+ var SWT = global.SWT;
+
  /**
   * ダウンロードボタンController
   */
- SVGWallpaperTool.DownloadButtonController = function(wallpaper, buttunElement) {
+ SWT.DownloadButtonController = function(wallpaper, buttunElement) {
 	
 	this.wallpaper = wallpaper;
 	this.buttonElement = $(buttunElement);
@@ -1784,10 +1767,14 @@
  
  };
  
+}(window));(function(global){
+
+ var SWT = global.SWT;
+ 
  /**
   * インジケーターView
   */
- SVGWallpaperTool.IndicatorView = function(wallpaper, indicatorElement) {
+ SWT.IndicatorView = function(wallpaper, indicatorElement) {
        
        this.wallpaper = wallpaper;
        this.element = $(indicatorElement);
@@ -1801,27 +1788,86 @@
  };
  
  //ローディング開始
- SVGWallpaperTool.IndicatorView.prototype.onLoadingStarted = function() {
+ SWT.IndicatorView.prototype.onLoadingStarted = function() {
        
-       this.element.html('<span class="svgWallpaperTool_loading">Loading...</span>');
+       this.element.html('<span class="SWT_loading">Loading...</span>');
        
  };
  
  //ローディング完全完了
- SVGWallpaperTool.IndicatorView.prototype.onLoadingAllCompleted = function() {
+ SWT.IndicatorView.prototype.onLoadingAllCompleted = function() {
        
        this.element.html('');
        
  };
  
  //パーツが追加できる上限いっぱいになった場合の処理
- SVGWallpaperTool.IndicatorView.prototype.onPartsFulled = function() {
+ SWT.IndicatorView.prototype.onPartsFulled = function() {
     
     this.element.html('Can not add any more parts!');
         
  };
  
- //グローバルオブジェクト化
- global.SVGWallpaperTool = SVGWallpaperTool;
+}(window));(function(global){
+
+ var SWT = global.SWT;
+
+ /**
+  * キャンバスサイズセレクターView
+  */
+ SWT.WallpaperSizeSelectorView = function(selectElement) {
+	
+	this.selectElement = $(selectElement);
+	 
+	//event
+	var self = this;
+	this.selectElement.bind("change", function(){
+		$(self).trigger("change"); 
+	});
  
-})(this);
+ };
+ 
+ SWT.WallpaperSizeSelectorView.prototype.getWidth = function() {
+ 
+	var value = this.selectElement.val().split("x");
+	return value[0];
+ 
+ };
+
+ SWT.WallpaperSizeSelectorView.prototype.getHeight = function() {
+ 
+	var value = this.selectElement.val().split("x");
+	return value[1];
+ 
+ };
+ 
+}(window));(function(global){
+
+ var SWT = global.SWT;
+
+ /**
+  * キャンバスサイズセレクターController
+  */
+ SWT.WallpaperSizeSelectorController = function(sizeSelectorView, wallpaper) {
+ 
+	this.sizeSelectorView = sizeSelectorView;
+	this.wallpaper = wallpaper;
+	
+	this.changeHandler(null);
+
+	//event
+	var self = this;
+	$(this.sizeSelectorView).bind("change", function(e){ self.changeHandler(e) });
+ 
+ };
+ 
+ SWT.WallpaperSizeSelectorController.prototype.changeHandler = function(e) {
+
+	var width = this.sizeSelectorView.getWidth();
+	var height = this.sizeSelectorView.getHeight();
+ 
+	this.wallpaper.setViewBox(width, height);
+ 
+ }; 
+
+}(window));
