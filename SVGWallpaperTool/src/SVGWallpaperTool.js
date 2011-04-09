@@ -597,7 +597,7 @@
        this.buttonMode = true;
  
        //BBoxTool
-       this.SVGBBoxTool = null;//new SVGBBoxTool(this);
+       this.SVGBoundingBox = null;//new SVGBoundingBox(this);
  
        //イベント処理
        var self = this;
@@ -623,8 +623,8 @@
 
 	content.appendChild(this.svgElement);
 	
-	if(this.SVGBBoxTool == null) {
-            this.SVGBBoxTool = new SVGBBoxTool(this);
+	if(this.SVGBoundingBox == null) {
+            this.SVGBoundingBox = new SVGBoundingBox(this);
 	}
 	
 };
@@ -664,7 +664,7 @@
               });
               
 	      //BBoxToolを有効に
-	      this.SVGBBoxTool.enable();
+	      this.SVGBoundingBox.enable();
 	      
               $(this).trigger("activated");
        }
@@ -679,7 +679,7 @@
        if(this.active) {
               
 	      //BBoxToolwを無効に
-	      this.SVGBBoxTool.disable();
+	      this.SVGBoundingBox.disable();
 	      
               this.active = false;
               $(this).trigger("deactivated");
