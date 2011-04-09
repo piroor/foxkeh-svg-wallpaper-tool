@@ -1,6 +1,8 @@
-(function(global){
+(function(){
 	
-	function loadSVG(url,callback) {
+	var SVGUtil = {};
+		
+	SVGUtil.loadSVG = function (url,callback) {
 		 
 		var xhr = new XMLHttpRequest();
 		xhr.open('GET', url, true);
@@ -23,17 +25,11 @@
  
 		};
 
-
 		xhr.send(null);
- 
  
 	};
 	
 	//グローバルオブジェクトに
-	if(typeof SVGUtil == "undefined") {
-		global.SVGUtil = {};
-	}
+	window.SVGUtil = SVGUtil;
 	
-	global.SVGUtil.loadSVG = loadSVG;
-	
-})(this);
+}());
