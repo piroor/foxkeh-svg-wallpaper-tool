@@ -52,7 +52,7 @@
    
 		};
 		
-		var svgWallpaperTool =  new SVGWallpaperTool.SVGWallpaperTool(initParam);
+		var svgWallpaperTool =  new SVGWallpaperTool(initParam);
                 
                 
                //位置調整
