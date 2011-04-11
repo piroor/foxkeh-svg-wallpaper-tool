@@ -7,7 +7,10 @@ DIST_DIR = ${PREFIX}/dist
 JS_ENGINE ?= `which node nodejs`
 COMPILER = ${JS_ENGINE} ${BUILD_DIR}/uglify.js --unsafe
 
-BASE_FILES = ${SRC_DIR}/SVGSprite.js
+BASE_FILES = ${SRC_DIR}/core.js\
+	   ${SRC_DIR}/display/DisplayObject.js\
+	   ${SRC_DIR}/display/DisplayObjectContainer.js\
+	   ${SRC_DIR}/display/Sprite.js
 
 MODULES = ${PREFIX}/COPYRIGHT\
 	${BASE_FILES}

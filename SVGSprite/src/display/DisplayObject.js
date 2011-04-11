@@ -1,4 +1,4 @@
-(function(global){
+(function (SVGSprite){
 
     /**
      * 中心点指定定数用オブジェクト
@@ -403,103 +403,6 @@
         return this._transform.rotate;
         
     };
-    
-
-    /**
-     * クロスブラウザ用ゲッターセッター関数
-     * @param {Object} obj ゲッターセッターを設定したいオブジェクト
-     * @param {String} name ゲッターセッタープロパティ名
-     * @param {Function} setter セッター関数
-     * @param {Function} getter ゲッター関数
-     */
-    function defineSetterGetter(obj, name, setter, getter) {
-
-        //__defineSetter__が未定義かつObject.definePropertyが有効な場合
-        if (!Object.prototype.__defineSetter__ && Object.defineProperty({},"x",{get: function(){return true}}).x) {
-
-            Object.defineProperty(obj,name, {
-                set: setter,
-                get: getter 
-            });
-
-        } else if(Object.prototype.__defineSetter__) {
-        
-            obj.__defineSetter__(name, setter);
-            obj.__defineGetter__(name, getter);
-        
-        }
-
-    };
-
-
-    /** 
-     * @class SVGSpriteはSVGエレメントをFlash/FlexのSpriteライクに扱うためのライブラリです。<br />
-     * SVGSpriteの各種クラスを含んでいます。<br />
-     */
-    var SVGSprite = {};
-	
-	/**
-	 * 仮親
-	 */
-	 SVGSprite.tmpParent = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-	 SVGSprite.tmpParent.setAttribute("width", 0);
-	 SVGSprite.tmpParent.setAttribute("height", 0);
-	 SVGSprite.tmpParent.id = "SVGSpriteTmpParent";
- 
-    /**
-     * EventListener をラッパーするターゲットを設定する
-     * 
-     * @class SVGSprite.EventDispatcher はイベント送出用基本クラスです。<br />
-     * SVGエレメントの EventListener にラッパーするためのクラスです。
-     * 
-     * @param {String} svgElement	ラッパー先のSVGElementかもしくはid
-     */
-    SVGSprite.EventDispatcher = function(svgElement) {
-            
-        /**
-        * 内部保持用　SVGElement
-        * @return {SVGElement}
-        */
-        this.svgElement = svgElement;
-        
-    }
-
-
-    /**
-     * イベントリスナーに登録する<br />
-     * SVGエレメントの addEventListener に橋渡しする。
-     * 
-     * @param {String}	type イベントタイプ
-     * @param {Function} listener リスナーファンクション
-     * @param {Boolean} useCapture ユーズキャプチャー
-     * @return {Void}
-     * 
-     */
-    SVGSprite.EventDispatcher.prototype.addEventListener = function(type, listener, useCapture){
-
-        useCapture = (useCapture)? true : false;
-        //this.svgElement.addEventListener(type, listener, useCapture);
-        this._originalElement.addEventListener(type, listener, useCapture);
-	
-    }
-
-
-    /**
-      * イベントリスナーから削除する<br />
-      * SVGエレメントの removeEventListener に橋渡しする。
-      * 
-      * @param {String}	type イベントタイプ
-      * @param {Function} listener リスナーファンクション
-      * @param {Boolean} useCapture ユーズキャプチャー
-      * @return {Void}
-      * 
-      */
-    SVGSprite.EventDispatcher.prototype.removeEventListener = function(type, listener, useCapture){
-
-        useCapture = (useCapture)? true : false;
-        //this.svgElement.removeEventListener(type, listener, useCapture);
-        this._originalElement.removeEventListener(type, listener, useCapture);
-    }
      
     /**
      * SVGSprite.DisplayObject を初期化する
@@ -518,15 +421,14 @@
      */
     SVGSprite.DisplayObject = function(svgElement) {
 
-        this.constructor(svgElement);
-
+	this.svgElement = svgElement;
+	
     }
-    SVGSprite.DisplayObject.prototype = new SVGSprite.EventDispatcher();
 
     /**
      * svgElement setter/getter
      */
-    defineSetterGetter(SVGSprite.DisplayObject.prototype, "svgElement",
+    SVGSprite._defineSetterGetter(SVGSprite.DisplayObject.prototype, "svgElement",
 
         //setter
         function(svgElement) {
@@ -628,7 +530,7 @@
     /**
      * prefix setter/getter
      */
-    defineSetterGetter(SVGSprite.DisplayObject.prototype, "_prefix",
+    SVGSprite._defineSetterGetter(SVGSprite.DisplayObject.prototype, "_prefix",
         
         //setter
         function() {
@@ -662,7 +564,7 @@
     /**
      * _viewPortScaleX setter/getter
      */
-    defineSetterGetter(SVGSprite.DisplayObject.prototype, "_viewPortScaleX",
+    SVGSprite._defineSetterGetter(SVGSprite.DisplayObject.prototype, "_viewPortScaleX",
         
         //setter
         function() {
@@ -696,7 +598,7 @@
     /**
      * _viewPortScaleY setter/getter
      */
-    defineSetterGetter(SVGSprite.DisplayObject.prototype, "_viewPortScaleY",
+    SVGSprite._defineSetterGetter(SVGSprite.DisplayObject.prototype, "_viewPortScaleY",
         
         //setter
         function() {
@@ -716,7 +618,7 @@
      * x座標ゲッター／セッター
      *
      */
-    defineSetterGetter(SVGSprite.DisplayObject.prototype, "x",
+    SVGSprite._defineSetterGetter(SVGSprite.DisplayObject.prototype, "x",
         
         //setter
         function(x) {
@@ -738,7 +640,7 @@
      * y座標ゲッター／セッター
      */
       
-    defineSetterGetter(SVGSprite.DisplayObject.prototype, "y",
+    SVGSprite._defineSetterGetter(SVGSprite.DisplayObject.prototype, "y",
         
         //setter
         function(y) {
@@ -758,7 +660,7 @@
     /**
      * 幅ゲッター／セッター
      */
-    defineSetterGetter(SVGSprite.DisplayObject.prototype, "width",
+    SVGSprite._defineSetterGetter(SVGSprite.DisplayObject.prototype, "width",
     
         //setter
         function(width) {
@@ -778,7 +680,7 @@
     /**
      * 高さ setter/getter
      */
-    defineSetterGetter(SVGSprite.DisplayObject.prototype, "height",
+    SVGSprite._defineSetterGetter(SVGSprite.DisplayObject.prototype, "height",
 
         //setter
         function(height) {
@@ -799,7 +701,7 @@
     /**
      * scaleX setter/getter
      */
-    defineSetterGetter(SVGSprite.DisplayObject.prototype, "scaleX",
+    SVGSprite._defineSetterGetter(SVGSprite.DisplayObject.prototype, "scaleX",
         
         //setter
         function(scaleX) {
@@ -819,7 +721,7 @@
     /**
      * scaleY setter/getter
      */
-    defineSetterGetter(SVGSprite.DisplayObject.prototype, "scaleY",
+    SVGSprite._defineSetterGetter(SVGSprite.DisplayObject.prototype, "scaleY",
     
         //setter
         function(scaleY) {
@@ -840,7 +742,7 @@
     /**
      * rotation setter/getter
      */
-    defineSetterGetter(SVGSprite.DisplayObject.prototype, "rotation",
+    SVGSprite._defineSetterGetter(SVGSprite.DisplayObject.prototype, "rotation",
 
 
         //setter
@@ -871,7 +773,7 @@
     /**
      * alpha setter/getter
      */
-    defineSetterGetter(SVGSprite.DisplayObject.prototype, "alpha",
+    SVGSprite._defineSetterGetter(SVGSprite.DisplayObject.prototype, "alpha",
     
         //setter
         function(alpha) {
@@ -894,7 +796,7 @@
     /**
      * buttonMode setter/getter
      */
-    defineSetterGetter(SVGSprite.DisplayObject.prototype, "buttonMode",
+    SVGSprite._defineSetterGetter(SVGSprite.DisplayObject.prototype, "buttonMode",
         
         //setter
         function(buttonMode) {
@@ -916,208 +818,40 @@
         
         }
     );
-
-    /**
-     * SVGSprite.DisplayObjectContainer を初期化する
-     * 
-     * @class SVGSprite.DisplayObjectContainer は、子要素をもつことができる表示オブジェクトの基本要素です。<br />
-     * 子要素の追加、削除、リストの参照などが行えます。
-     * 
-     * @param {SVGElement} svgElement	SVGElement名
-     * @return {Void}
-     */
-    SVGSprite.DisplayObjectContainer = function(svgElement) {
-
-        this.constructor(svgElement);
-            
-	};
-
-    SVGSprite.DisplayObjectContainer.prototype = new SVGSprite.DisplayObject();
-
-    /**
-      * 子要素を追加する
-      *
-      * @param {SVGSprite.DisplayObject} child 追加する子要素
-      *
-      */
-    SVGSprite.DisplayObjectContainer.prototype.addChild = function(child) {
-
-        throw new Error("未実装です。");
-        
-	};
-
-    /**
-    * 子要素として追加する
-    *
-    * @param {SVGElement} content 追加先の要素
-    *
-    */
-    SVGSprite.DisplayObjectContainer.prototype.appendTo = function(content) {
-
-	   content.appendChild(this.svgElement);
-
-    };
- 
-    /**
-     * Sprite を初期化する
-     * 
-     * @class SVGSprite.Sprite は、表示リストの基本的なオブジェクトです。<br />
-     * SVGエレメントのドラッグを有効／無効にすることができます。
-     * 
-     * @param {SVGElement} svgElement	SVGElement名
-     * @return {Void}
-     */
-    SVGSprite.Sprite = function(svgElement) {
-
-        this.constructor(svgElement);
-         
-    }
-    SVGSprite.Sprite.prototype = new SVGSprite.DisplayObjectContainer();
-
-    /**
-     * ドラッグ可能にする
-     * @param {Boolean} lockCenter 未定
-     * @param {} bounds
-     * @return {Void}
-     */
-    SVGSprite.Sprite.prototype.startDrag = function(lockCenter, bounds) {
-
-        //mousedown を無効化して、不要なドラッグを防止
-        this.svgElement.ownerSVGElement.addEventListener("mousedown", function(e){e.preventDefault();}, false);
-        
-        //ドラッグ範囲の設定
-        if(typeof bounds != "undefined" && bounds != null && !isNaN(bounds.x) && !isNaN(bounds.y)  && !isNaN(bounds.width) && !isNaN(bounds.height) ) {
-            
-            this._bounds = bounds;
-            this._bounds.left = this._bounds.x;
-            this._bounds.right = this._bounds.x+this._bounds.width;
-            this._bounds.top = this._bounds.y;
-            this._bounds.bottom = this._bounds.y+this._bounds.height;
-                
-        } else {
-            
-            this._bounds = null;
-            
-        }
-        
-        //ドラッグ開始
-        SVGSprite.Sprite.drag.startDrag(this);
-	
-    }
-
-    /**
-      * ドラッグ不可にする
-      *
-      * @return {Void}
-      *
-      */
-    SVGSprite.Sprite.prototype.stopDrag = function() {
-
-        SVGSprite.Sprite.drag.stopDrag();
-
-    }
-
-    /**
-     * ドラッグ管理用オブジェクト
-     *
-     */
-    SVGSprite.Sprite.drag = {
-        
-        /** 現在ドラッグ中のSVGSprite */
-        target: null,
-        
-        /** ターゲットの初期位置 */
-        origX: 0,
-        origY: 0,
-        
-        /** ドラッグ時のマウス初期位置 */
-        origMouseX: null,
-        origMouseY: null
-        
-    };
-     
-    /**
-     * ドラッグを開始する
-     * @param	{Event}	event	マウスイベント
-     * @return {Void}
-     */
-    SVGSprite.Sprite.drag.startDrag = function(target) {
-        
-        //ターゲットの設定
-        this.target = target;
-        
-        //ターゲットの初期位置を設定
-        this.origX = target.x;
-        this.origY = target.y;
-        
-        //ドラッグ開始
-        SVGSprite.Sprite.drag.target.svgElement.ownerSVGElement.addEventListener("mousemove", SVGSprite.Sprite.drag._doDrag, true);
-    }
-
-    /**
-     * ドラッグを実行する
-     * @param	{Event}	event	マウスイベント
-     * @return {Void}
-     */
-    SVGSprite.Sprite.drag._doDrag = function(event) {
-
-        var that = SVGSprite.Sprite.drag;
-        
-        //マウスの初期位置設定
-        if(that.origMouseX == null) {
-        
-            that.origMouseX = event.clientX;
-            that.origMouseY = event.clientY;
-	                
-        }
-	            
-        //再描画一時停止
-        //var id = that.target.svgElement.ownerSVGElement.suspendRedraw(1000); //Operaの場合 unsuspendRedrawに不具合あり？
-        
-        //移動
-        var x = ((event.clientX-that.origMouseX)/that.target._viewPortScaleX) + that.origX; 
-        var y = ((event.clientY-that.origMouseY)/that.target._viewPortScaleY) + that.origY;
-        	
-        //移動制限
-        if(that.target._bounds != null) {
-            x = (x < that.target._bounds.left)? that.target._bounds.left : (x+that.target.width > that.target._bounds.right)? that.target._bounds.right-that.target.width : x;
-            y = (y < that.target._bounds.top)? that.target._bounds.top : (y+that.target.height > that.target._bounds.bottom)? that.target._bounds.bottom-that.target.height : y;
-        }
-	
-        that.target.x = x;
-        that.target.y = y;
-        
-        //再描画再開
-        //that.target.svgElement.ownerSVGElement.unsuspendRedraw(id);
-            
-    }
-
-    /**
-     * ドラッグを終了する
-     * @param	{Event}	event	マウスイベント
-     * @return {Void}
-     */
-    SVGSprite.Sprite.drag.stopDrag = function() {
-        
-        var that = SVGSprite.Sprite.drag;
-        
-        if(SVGSprite.Sprite.drag.target != null) {
-            SVGSprite.Sprite.drag.target.svgElement.ownerSVGElement.removeEventListener("mousemove", SVGSprite.Sprite.drag._doDrag, true);
-        }
-        
-        //各種プロパティを初期化
-        that.target = null;
-        that.origX = 0;
-        that.origY = 0;
-        that.origMouseX = null;
-        that.origMouseY = null;
-            
-    }
-
-
-    /**
-     * グローバルオブジェクトに
-     */
-    global.SVGSprite = SVGSprite;
     
-})(this);
+    /**
+     * イベントリスナーに登録する<br />
+     * SVGエレメントの addEventListener に橋渡しする。
+     * 
+     * @param {String}	type イベントタイプ
+     * @param {Function} listener リスナーファンクション
+     * @param {Boolean} useCapture ユーズキャプチャー
+     * @return {Void}
+     * 
+     */
+    SVGSprite.DisplayObject.prototype.addEventListener = function(type, listener, useCapture){
+
+        useCapture = (useCapture)? true : false;
+        //this.svgElement.addEventListener(type, listener, useCapture);
+        this._originalElement.addEventListener(type, listener, useCapture);
+	
+    };
+
+    /**
+      * イベントリスナーから削除する<br />
+      * SVGエレメントの removeEventListener に橋渡しする。
+      * 
+      * @param {String}	type イベントタイプ
+      * @param {Function} listener リスナーファンクション
+      * @param {Boolean} useCapture ユーズキャプチャー
+      * @return {Void}
+      * 
+      */
+    SVGSprite.DisplayObject.prototype.removeEventListener = function(type, listener, useCapture){
+
+        useCapture = (useCapture)? true : false;
+        //this.svgElement.removeEventListener(type, listener, useCapture);
+        this._originalElement.removeEventListener(type, listener, useCapture);
+    };
+
+}(SVGSprite));
