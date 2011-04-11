@@ -3,18 +3,18 @@
     /**
      * Sprite を初期化する
      * 
-     * @class SVGSprite.Sprite は、表示リストの基本的なオブジェクトです。<br />
+     * @class SVGSprite.display.Sprite は、表示リストの基本的なオブジェクトです。<br />
      * SVGエレメントのドラッグを有効／無効にすることができます。
      * 
      * @param {SVGElement} svgElement	SVGElement名
      * @return {Void}
      */
-    SVGSprite.Sprite = function(svgElement) {
+    SVGSprite.display.Sprite = function(svgElement) {
 
         this.constructor(svgElement);
          
     }
-    SVGSprite.Sprite.prototype = new SVGSprite.DisplayObjectContainer();
+    SVGSprite.display.Sprite.prototype = new SVGSprite.display.DisplayObjectContainer();
 
     /**
      * ドラッグ可能にする
@@ -22,7 +22,7 @@
      * @param {} bounds
      * @return {Void}
      */
-    SVGSprite.Sprite.prototype.startDrag = function(lockCenter, bounds) {
+    SVGSprite.display.Sprite.prototype.startDrag = function(lockCenter, bounds) {
 
         //mousedown を無効化して、不要なドラッグを防止
         this.svgElement.ownerSVGElement.addEventListener("mousedown", function(e){e.preventDefault();}, false);
@@ -43,7 +43,7 @@
         }
         
         //ドラッグ開始
-        SVGSprite.Sprite.drag.startDrag(this);
+        SVGSprite.display.Sprite.drag.startDrag(this);
 	
     }
 
@@ -53,9 +53,9 @@
       * @return {Void}
       *
       */
-    SVGSprite.Sprite.prototype.stopDrag = function() {
+    SVGSprite.display.Sprite.prototype.stopDrag = function() {
 
-        SVGSprite.Sprite.drag.stopDrag();
+        SVGSprite.display.Sprite.drag.stopDrag();
 
     }
 
@@ -63,7 +63,7 @@
      * ドラッグ管理用オブジェクト
      *
      */
-    SVGSprite.Sprite.drag = {
+    SVGSprite.display.Sprite.drag = {
         
         /** 現在ドラッグ中のSVGSprite */
         target: null,
@@ -83,7 +83,7 @@
      * @param	{Event}	event	マウスイベント
      * @return {Void}
      */
-    SVGSprite.Sprite.drag.startDrag = function(target) {
+    SVGSprite.display.Sprite.drag.startDrag = function(target) {
         
         //ターゲットの設定
         this.target = target;
@@ -93,7 +93,7 @@
         this.origY = target.y;
         
         //ドラッグ開始
-        SVGSprite.Sprite.drag.target.svgElement.ownerSVGElement.addEventListener("mousemove", SVGSprite.Sprite.drag._doDrag, true);
+        SVGSprite.display.Sprite.drag.target.svgElement.ownerSVGElement.addEventListener("mousemove", SVGSprite.display.Sprite.drag._doDrag, true);
     }
 
     /**
@@ -101,9 +101,9 @@
      * @param	{Event}	event	マウスイベント
      * @return {Void}
      */
-    SVGSprite.Sprite.drag._doDrag = function(event) {
+    SVGSprite.display.Sprite.drag._doDrag = function(event) {
 
-        var that = SVGSprite.Sprite.drag;
+        var that = SVGSprite.display.Sprite.drag;
         
         //マウスの初期位置設定
         if(that.origMouseX == null) {
@@ -139,12 +139,12 @@
      * @param	{Event}	event	マウスイベント
      * @return {Void}
      */
-    SVGSprite.Sprite.drag.stopDrag = function() {
+    SVGSprite.display.Sprite.drag.stopDrag = function() {
         
-        var that = SVGSprite.Sprite.drag;
+        var that = SVGSprite.display.Sprite.drag;
         
-        if(SVGSprite.Sprite.drag.target != null) {
-            SVGSprite.Sprite.drag.target.svgElement.ownerSVGElement.removeEventListener("mousemove", SVGSprite.Sprite.drag._doDrag, true);
+        if(SVGSprite.display.Sprite.drag.target != null) {
+            SVGSprite.display.Sprite.drag.target.svgElement.ownerSVGElement.removeEventListener("mousemove", SVGSprite.display.Sprite.drag._doDrag, true);
         }
         
         //各種プロパティを初期化

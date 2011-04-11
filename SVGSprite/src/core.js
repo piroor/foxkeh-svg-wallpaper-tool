@@ -6,6 +6,9 @@
      */
     var SVGSprite = {};
     
+    //名前空間設定
+    SVGSprite.display = {};
+    
     /**
      * クロスブラウザ用ゲッターセッター関数
      * @param {Object} obj ゲッターセッターを設定したいオブジェクト

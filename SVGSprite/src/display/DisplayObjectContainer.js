@@ -1,29 +1,29 @@
 (function (SVGSprite){
 
     /**
-     * SVGSprite.DisplayObjectContainer を初期化する
+     * SVGSprite.display.DisplayObjectContainer を初期化する
      * 
-     * @class SVGSprite.DisplayObjectContainer は、子要素をもつことができる表示オブジェクトの基本要素です。<br />
+     * @class SVGSprite.display.DisplayObjectContainer は、子要素をもつことができる表示オブジェクトの基本要素です。<br />
      * 子要素の追加、削除、リストの参照などが行えます。
      * 
      * @param {SVGElement} svgElement	SVGElement名
      * @return {Void}
      */
-    SVGSprite.DisplayObjectContainer = function(svgElement) {
+    SVGSprite.display.DisplayObjectContainer = function(svgElement) {
 
         this.constructor(svgElement);
             
 	};
 
-    SVGSprite.DisplayObjectContainer.prototype = new SVGSprite.DisplayObject();
+    SVGSprite.display.DisplayObjectContainer.prototype = new SVGSprite.display.DisplayObject();
 
     /**
       * 子要素を追加する
       *
-      * @param {SVGSprite.DisplayObject} child 追加する子要素
+      * @param {SVGSprite.display.DisplayObject} child 追加する子要素
       *
       */
-    SVGSprite.DisplayObjectContainer.prototype.addChild = function(child) {
+    SVGSprite.display.DisplayObjectContainer.prototype.addChild = function(child) {
 
         throw new Error("未実装です。");
         
@@ -35,7 +35,7 @@
     * @param {SVGElement} content 追加先の要素
     *
     */
-    SVGSprite.DisplayObjectContainer.prototype.appendTo = function(content) {
+    SVGSprite.display.DisplayObjectContainer.prototype.appendTo = function(content) {
 
 	   content.appendChild(this.svgElement);
 

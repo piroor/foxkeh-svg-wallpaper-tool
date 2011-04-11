@@ -405,21 +405,21 @@
     };
      
     /**
-     * SVGSprite.DisplayObject を初期化する
+     * SVGSprite.display.DisplayObject を初期化する
      * 
-     * @class SVGSprite.DisplayObject は表示することのできるオブジェクトの基本クラスです。<br />
+     * @class SVGSprite.display.DisplayObject は表示することのできるオブジェクトの基本クラスです。<br />
      * SVGエレメントを移動、拡大縮小、回転、透過させることができます。
      * 
      * @return {Void}
      *
      * @example
-     * var monkey = new SVGSprite.DisplayObject('monkey'); //引数にはSVGエレメントのidを指定<br />
+     * var monkey = new SVGSprite.display.DisplayObject('monkey'); //引数にはSVGエレメントのidを指定<br />
      * monkey.x = 100;				//x座標の100pxに移動<br />
      * monkey.rotation = 90;	//90度回転<br />
      * monkey.scaleY = 1.5;		//y方向に1.5倍拡大<br />
      * monkey.alpha = .2;			//透明度を.2に設定
      */
-    SVGSprite.DisplayObject = function(svgElement) {
+    SVGSprite.display.DisplayObject = function(svgElement) {
 
 	this.svgElement = svgElement;
 	
@@ -428,7 +428,7 @@
     /**
      * svgElement setter/getter
      */
-    SVGSprite._defineSetterGetter(SVGSprite.DisplayObject.prototype, "svgElement",
+    SVGSprite._defineSetterGetter(SVGSprite.display.DisplayObject.prototype, "svgElement",
 
         //setter
         function(svgElement) {
@@ -530,7 +530,7 @@
     /**
      * prefix setter/getter
      */
-    SVGSprite._defineSetterGetter(SVGSprite.DisplayObject.prototype, "_prefix",
+    SVGSprite._defineSetterGetter(SVGSprite.display.DisplayObject.prototype, "_prefix",
         
         //setter
         function() {
@@ -553,7 +553,7 @@
       * @return {Number}
       *
       */
-    SVGSprite.DisplayObject.prototype._getViewPortScaleX = function(){
+    SVGSprite.display.DisplayObject.prototype._getViewPortScaleX = function(){
         
 	var viewBoxWidth = this._svgElement.nearestViewportElement.viewBox.baseVal.width;
 	var viewportWidth = this._svgElement.nearestViewportElement.width.baseVal.value;
@@ -564,7 +564,7 @@
     /**
      * _viewPortScaleX setter/getter
      */
-    SVGSprite._defineSetterGetter(SVGSprite.DisplayObject.prototype, "_viewPortScaleX",
+    SVGSprite._defineSetterGetter(SVGSprite.display.DisplayObject.prototype, "_viewPortScaleX",
         
         //setter
         function() {
@@ -587,7 +587,7 @@
       * @return {Number}
       *
       */
-    SVGSprite.DisplayObject.prototype._getViewPortScaleY = function(){
+    SVGSprite.display.DisplayObject.prototype._getViewPortScaleY = function(){
 	
 	var viewBoxHeight = this._svgElement.nearestViewportElement.viewBox.baseVal.height;
 	var viewportHeight = this._svgElement.nearestViewportElement.height.baseVal.value;
@@ -598,7 +598,7 @@
     /**
      * _viewPortScaleY setter/getter
      */
-    SVGSprite._defineSetterGetter(SVGSprite.DisplayObject.prototype, "_viewPortScaleY",
+    SVGSprite._defineSetterGetter(SVGSprite.display.DisplayObject.prototype, "_viewPortScaleY",
         
         //setter
         function() {
@@ -618,7 +618,7 @@
      * x座標ゲッター／セッター
      *
      */
-    SVGSprite._defineSetterGetter(SVGSprite.DisplayObject.prototype, "x",
+    SVGSprite._defineSetterGetter(SVGSprite.display.DisplayObject.prototype, "x",
         
         //setter
         function(x) {
@@ -640,7 +640,7 @@
      * y座標ゲッター／セッター
      */
       
-    SVGSprite._defineSetterGetter(SVGSprite.DisplayObject.prototype, "y",
+    SVGSprite._defineSetterGetter(SVGSprite.display.DisplayObject.prototype, "y",
         
         //setter
         function(y) {
@@ -660,7 +660,7 @@
     /**
      * 幅ゲッター／セッター
      */
-    SVGSprite._defineSetterGetter(SVGSprite.DisplayObject.prototype, "width",
+    SVGSprite._defineSetterGetter(SVGSprite.display.DisplayObject.prototype, "width",
     
         //setter
         function(width) {
@@ -680,7 +680,7 @@
     /**
      * 高さ setter/getter
      */
-    SVGSprite._defineSetterGetter(SVGSprite.DisplayObject.prototype, "height",
+    SVGSprite._defineSetterGetter(SVGSprite.display.DisplayObject.prototype, "height",
 
         //setter
         function(height) {
@@ -701,7 +701,7 @@
     /**
      * scaleX setter/getter
      */
-    SVGSprite._defineSetterGetter(SVGSprite.DisplayObject.prototype, "scaleX",
+    SVGSprite._defineSetterGetter(SVGSprite.display.DisplayObject.prototype, "scaleX",
         
         //setter
         function(scaleX) {
@@ -721,7 +721,7 @@
     /**
      * scaleY setter/getter
      */
-    SVGSprite._defineSetterGetter(SVGSprite.DisplayObject.prototype, "scaleY",
+    SVGSprite._defineSetterGetter(SVGSprite.display.DisplayObject.prototype, "scaleY",
     
         //setter
         function(scaleY) {
@@ -742,7 +742,7 @@
     /**
      * rotation setter/getter
      */
-    SVGSprite._defineSetterGetter(SVGSprite.DisplayObject.prototype, "rotation",
+    SVGSprite._defineSetterGetter(SVGSprite.display.DisplayObject.prototype, "rotation",
 
 
         //setter
@@ -764,7 +764,7 @@
      * alpha値を返す
      * @return {Number}
      */
-    SVGSprite.DisplayObject.prototype._getAlpha = function() {
+    SVGSprite.display.DisplayObject.prototype._getAlpha = function() {
         
         var _alpha = this._oapcityElement.getAttribute('opacity');
         return  Number((typeof _alpha === 'string')? _alpha : 1);
@@ -773,7 +773,7 @@
     /**
      * alpha setter/getter
      */
-    SVGSprite._defineSetterGetter(SVGSprite.DisplayObject.prototype, "alpha",
+    SVGSprite._defineSetterGetter(SVGSprite.display.DisplayObject.prototype, "alpha",
     
         //setter
         function(alpha) {
@@ -796,7 +796,7 @@
     /**
      * buttonMode setter/getter
      */
-    SVGSprite._defineSetterGetter(SVGSprite.DisplayObject.prototype, "buttonMode",
+    SVGSprite._defineSetterGetter(SVGSprite.display.DisplayObject.prototype, "buttonMode",
         
         //setter
         function(buttonMode) {
@@ -829,7 +829,7 @@
      * @return {Void}
      * 
      */
-    SVGSprite.DisplayObject.prototype.addEventListener = function(type, listener, useCapture){
+    SVGSprite.display.DisplayObject.prototype.addEventListener = function(type, listener, useCapture){
 
         useCapture = (useCapture)? true : false;
         //this.svgElement.addEventListener(type, listener, useCapture);
@@ -847,7 +847,7 @@
       * @return {Void}
       * 
       */
-    SVGSprite.DisplayObject.prototype.removeEventListener = function(type, listener, useCapture){
+    SVGSprite.display.DisplayObject.prototype.removeEventListener = function(type, listener, useCapture){
 
         useCapture = (useCapture)? true : false;
         //this.svgElement.removeEventListener(type, listener, useCapture);

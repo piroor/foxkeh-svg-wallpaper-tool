@@ -23,7 +23,7 @@
  
  };
  
- SWT.Parts.prototype = new SVGSprite.Sprite;
+ SWT.Parts.prototype = new SVGSprite.display.Sprite;
  
  SWT.Parts.prototype.setSvgElement = function(svgElement) {
 

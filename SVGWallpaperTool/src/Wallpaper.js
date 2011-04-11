@@ -121,7 +121,7 @@
 	}
  
 	this._copyrightLayer.appendChild(svgElement);
-	var copyright = new SVGSprite.Sprite(svgElement);
+	var copyright = new SVGSprite.display.Sprite(svgElement);
 
 	this._copyright = copyright;
  
@@ -172,7 +172,7 @@
 	}
  
 	this._backgroundLayer.appendChild(svgElement);
-	var background = new SVGSprite.Sprite(svgElement);
+	var background = new SVGSprite.display.Sprite(svgElement);
 
 	this._background = background;
  
